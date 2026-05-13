@@ -1,0 +1,1 @@
+A site that is close to figma, a designer of web interfaces. But with specialization in fast prototyping: you work not with bare shapes, but with whole UI elements, that you drag and drop on the canvas.
