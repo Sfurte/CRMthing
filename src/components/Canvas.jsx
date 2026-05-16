@@ -1,35 +1,64 @@
-﻿import { useDroppable } from '@dnd-kit/core';
+/**
+ * The main canvas area – a viewport into a panned/zoomed world.
+ *
+ * Layout hierarchy:
+ *   Canvas (overflow:hidden viewport)        ← droppable target
+ *     └── World container (translate + scale) ← everything inside is panned/zoomed
+ *           └── Artboard (1440×900 white box)
+ *                 ├── DraggableElement (Input)
+ *                 ├── DraggableElement (Button)
+ *                 └── …
+ *
+ * @param {{ current: DOMRect | null }} [props.canvasRectRef]
+ *   If provided, Canvas will keep this ref up-to-date with the canvas element's
+ *   bounding rect, so that parent components (like App) can compute canvas coordinates.
+ */
+import { useDroppable } from '@dnd-kit/core';
+import { useEffect } from 'react';
 import useStore from '../store';
 import DraggableElement from './DraggableElement';
 import useCanvasTransform from '../hooks/useCanvasTransform';
+import useCombinedRef from '../hooks/useCombinedRef';
+import { ARTBOARD_WIDTH, ARTBOARD_HEIGHT } from '../constants';
+import { useTransformRef } from '../contexts/TransformContext';
 
-const ARTBOARD_WIDTH = 1440;
-const ARTBOARD_HEIGHT = 900;
-
-export default function Canvas({ canvasRef, transformRef, onCanvasClick }) {
+export default function Canvas({ canvasRectRef }) {
   const elements = useStore((s) => s.elements);
+  const selectElement = useStore((s) => s.selectElement);
+
+  // dnd-kit droppable registration
   const { setNodeRef } = useDroppable({ id: 'canvas' });
 
-  const {
-    transform,
-    containerRef,
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
-    spacePressed,
-  } = useCanvasTransform();
+  // Zoom / pan logic
+  const { transform, containerRef, handlePointerDown, handlePointerMove, handlePointerUp, spacePressed } =
+    useCanvasTransform();
 
-  if (transformRef) {
-    transformRef.current = transform;
-  }
+  // Expose the latest transform via context ref so App.jsx can read it
+  const transformRef = useTransformRef();
+  transformRef.current = transform;
 
-  const mergedRef = (node) => {
-    canvasRef.current = node;
-    setNodeRef(node);
-    containerRef.current = node;
-  };
+  // Keep canvasRectRef up-to-date even when the canvas is resized
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node || !canvasRectRef) return;
 
-  const isPanningCursor = spacePressed.current ? 'grab' : undefined;
+    const updateRect = () => {
+      canvasRectRef.current = node.getBoundingClientRect();
+    };
+
+    // Set initial value
+    updateRect();
+
+    // Watch for resizes (e.g. window resize, sidebar toggle)
+    const observer = new ResizeObserver(updateRect);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []); // runs once on mount; refs are stable
+
+  // Combine container ref with the droppable ref
+  const mergedRef = useCombinedRef(containerRef, setNodeRef);
+
+  const isPanning = spacePressed.current;
   const { x: panX, y: panY, zoom } = transform;
 
   return (
@@ -41,17 +70,16 @@ export default function Canvas({ canvasRef, transformRef, onCanvasClick }) {
         position: 'relative',
         overflow: 'hidden',
         background: '#F0F7FF',
-        cursor: isPanningCursor,
-        outline: 'none',
+        cursor: isPanning ? 'grab' : undefined,
         border: '1px solid #D4D4D4',
       }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
-      onClick={onCanvasClick}
+      onClick={() => selectElement(null)}
     >
-      {/* World container: everything inside here is panned/zoomed */}
+      {/* World container: panned and zoomed via CSS transform */}
       <div
         style={{
           position: 'absolute',
@@ -59,11 +87,11 @@ export default function Canvas({ canvasRef, transformRef, onCanvasClick }) {
           left: 0,
           width: 1,
           height: 1,
-          transform: 'translate(' + panX + 'px, ' + panY + 'px) scale(' + zoom + ')',
+          transform: `translate(${panX}px, ${panY}px) scale(${zoom})`,
           transformOrigin: '0 0',
         }}
       >
-        {/* Artboard with dashed blue border */}
+        {/* Artboard – the white "page" with a dashed blue border */}
         <div
           style={{
             width: ARTBOARD_WIDTH,
@@ -79,8 +107,6 @@ export default function Canvas({ canvasRef, transformRef, onCanvasClick }) {
           ))}
         </div>
       </div>
-
-
     </div>
   );
 }
