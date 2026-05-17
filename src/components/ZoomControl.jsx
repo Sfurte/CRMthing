@@ -3,7 +3,7 @@
  * the user to type a custom value.
  */
 import { useState, useRef } from 'react';
-import useStore from '../store';
+import useStore, { selectViewTransform } from '../store';
 import useClickOutside from '../hooks/useClickOutside';
 
 const btnStyle = {
@@ -24,12 +24,11 @@ const btnStyle = {
 };
 
 export default function ZoomControl() {
-  const { zoom } = useStore((s) => s.viewTransform);
+  const viewTransform = useStore(selectViewTransform);
   const setViewTransform = useStore((s) => s.setViewTransform);
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  // Close on click outside
   useClickOutside(ref, () => setOpen(false));
 
   const handleInput = (e) => {
@@ -49,7 +48,7 @@ export default function ZoomControl() {
   return (
     <div ref={ref} style={{ position: 'relative' }}>
       <button style={btnStyle} onClick={() => setOpen(!open)}>
-        {Math.round(zoom * 100)}%
+        {Math.round(viewTransform.zoom * 100)}%
       </button>
       {open && (
         <div
@@ -79,7 +78,7 @@ export default function ZoomControl() {
           </label>
           <input
             type="number"
-            defaultValue={Math.round(zoom * 100)}
+            defaultValue={Math.round(viewTransform.zoom * 100)}
             min={20}
             max={500}
             autoFocus

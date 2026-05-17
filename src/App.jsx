@@ -9,6 +9,7 @@ import Header from './components/Header';
 import LeftPanel from './components/LeftPanel';
 import Toolbar from './components/Toolbar';
 import Canvas from './components/Canvas';
+import PagesInspector from './components/PagesInspector';
 import useStore from './store';
 import { TransformProvider, useTransformRef } from './contexts/TransformContext';
 
@@ -122,6 +123,7 @@ function AppContent() {
               <Canvas canvasRectRef={canvasRectRef} />
             </div>
           </div>
+          <PagesInspector />
         </div>
       </div>
     </DndContext>

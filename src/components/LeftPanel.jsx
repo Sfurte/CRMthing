@@ -1,4 +1,4 @@
-﻿import useStore from '../store';
+import useStore, { selectActivePageElements } from '../store';
 
 const styles = {
   panel: {
@@ -64,7 +64,7 @@ const styles = {
 
 export default function LeftPanel() {
   const selectedId = useStore((s) => s.selectedId);
-  const elements = useStore((s) => s.elements);
+  const elements = useStore(selectActivePageElements);
   const setElementPosition = useStore((s) => s.setElementPosition);
 
   const selectedElement = elements.find((el) => el.id === selectedId);
@@ -87,7 +87,6 @@ export default function LeftPanel() {
     <div style={styles.panel}>
       <div style={styles.title}>Свойства</div>
 
-      {/* Selected element properties */}
       {selectedElement ? (
         <div>
           <div style={styles.sectionLabel}>{selectedElement.type}</div>

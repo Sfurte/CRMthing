@@ -1,16 +1,16 @@
 /**
  * Manages zoom (scroll wheel) and pan (middle-mouse / Space+left-click).
  *
- * All state lives in the Zustand store (`viewTransform`).
- * This hook just attaches event listeners and calls store actions.
+ * All state lives in the Zustand store, inside the active page's viewTransform.
  */
 import { useCallback, useRef, useEffect } from 'react';
-import useStore from '../store';
+import useStore, { selectViewTransform } from '../store';
 import { MIN_ZOOM, MAX_ZOOM } from '../constants';
 
 export default function useCanvasTransform() {
-  const { x: panX, y: panY, zoom } = useStore((s) => s.viewTransform);
+  const viewTransform = useStore(selectViewTransform);
   const setViewTransform = useStore((s) => s.setViewTransform);
+  const { x: panX, y: panY, zoom } = viewTransform;
 
   const containerRef = useRef(null);
 
@@ -31,11 +31,11 @@ export default function useCanvasTransform() {
       const delta = -e.deltaY * 0.15 * 0.01;
       const zoomFactor = 1 + delta;
 
-      // Read the latest state directly - the store is synchronous
-      const prev = useStore.getState().viewTransform;
+      // Read the latest state directly
+      const prev = selectViewTransform(useStore.getState());
       const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prev.zoom * zoomFactor));
 
-      // Zoom toward cursor - keeps the point under the mouse fixed
+      // Zoom toward cursor
       const rect = el.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
@@ -53,13 +53,11 @@ export default function useCanvasTransform() {
 
   // ---- Pan via pointer events ----
   const handlePointerDown = useCallback((e) => {
-    // Middle mouse button OR left-click while space is held
     if (e.button === 1 || (e.button === 0 && spacePressed.current)) {
       e.preventDefault();
       isPanning.current = true;
       panStart.current = { x: e.clientX, y: e.clientY };
-      // Snapshot the current transform from the store at pan start
-      const { x, y } = useStore.getState().viewTransform;
+      const { x, y } = selectViewTransform(useStore.getState());
       transformOnPanStart.current = { x, y };
     }
   }, []);
@@ -68,8 +66,7 @@ export default function useCanvasTransform() {
     if (!isPanning.current) return;
     const dx = e.clientX - panStart.current.x;
     const dy = e.clientY - panStart.current.y;
-    // Read the latest zoom from the store
-    const { zoom: currentZoom } = useStore.getState().viewTransform;
+    const { zoom: currentZoom } = selectViewTransform(useStore.getState());
     setViewTransform({
       x: transformOnPanStart.current.x + dx,
       y: transformOnPanStart.current.y + dy,
@@ -104,7 +101,6 @@ export default function useCanvasTransform() {
   }, []);
 
   return {
-    /** The current { x, y, zoom } from the store (read from subscription) */
     transform: { x: panX, y: panY, zoom },
     containerRef,
     handlePointerDown,
