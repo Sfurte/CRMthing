@@ -1,10 +1,9 @@
 /**
  * Dropdown to add a new component to the canvas.
- * Renders a button that opens a list of available element types.
- * On selection, adds the element at a default position (200, 200).
+ * Click an item to add it at a default position (200, 200).
  */
 import { useState, useRef } from 'react';
-import { ELEMENT_TYPES, elementDefinitions } from '../elements/registry';
+import { elementDefinitions } from '../elements/registry';
 import useStore from '../store';
 import useClickOutside from '../hooks/useClickOutside';
 
@@ -53,17 +52,7 @@ export default function AddComponentDropdown() {
   const [hoveredIdx, setHoveredIdx] = useState(null);
   const ref = useRef(null);
 
-  // Close on click outside
   useClickOutside(ref, () => setOpen(false));
-
-  const handleSelect = (type) => {
-    addElement(type, 200, 200);
-    setOpen(false);
-  };
-
-  // Build a lookup map: type -> definition (with .label)
-  const defByType = {};
-  elementDefinitions.forEach((d) => { defByType[d.type] = d; });
 
   return (
     <div ref={ref} style={{ position: 'relative' }}>
@@ -88,18 +77,21 @@ export default function AddComponentDropdown() {
             overflow: 'hidden',
           }}
         >
-          {ELEMENT_TYPES.map((type, i) => (
+          {elementDefinitions.map((def, i) => (
             <button
-              key={type}
+              key={def.type}
               style={{
                 ...dropdownItemStyle,
                 ...(hoveredIdx === i ? dropdownItemHoverStyle : {}),
               }}
               onMouseEnter={() => setHoveredIdx(i)}
               onMouseLeave={() => setHoveredIdx(null)}
-              onClick={() => handleSelect(type)}
+              onClick={() => {
+                addElement(def.type, 200, 200);
+                setOpen(false);
+              }}
             >
-              {(defByType[type] && defByType[type].label) || type}
+              {def.label}
             </button>
           ))}
         </div>

@@ -7,7 +7,7 @@
 import { useDraggable } from '@dnd-kit/core';
 import { ElementRenderers } from '../elements/registry';
 
-export default function DraggableElement({ element, zoom }) {
+export default function DraggableElement({ element, zoom, onContextMenu }) {
   const { id, type, x, y } = element;
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
@@ -32,6 +32,11 @@ export default function DraggableElement({ element, zoom }) {
       }}
       {...listeners}
       {...attributes}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onContextMenu?.(e, id);
+      }}
     >
       <Renderer />
     </div>

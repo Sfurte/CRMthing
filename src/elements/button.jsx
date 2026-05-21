@@ -1,6 +1,6 @@
 ﻿export const definition = {
   type: 'Button',
-  label: 'Button',
+  label: 'Кнопка',
 };
 
 export default function ButtonElement() {
@@ -19,7 +19,7 @@ export default function ButtonElement() {
       color: '#666',
       userSelect: 'none',
     }}>
-      Button
+      Кнопка
     </div>
   );
 }

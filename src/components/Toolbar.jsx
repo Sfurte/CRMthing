@@ -45,7 +45,7 @@ export default function Toolbar() {
       style={{
         height: 44,
         background: '#FFFFFF',
-        borderBottom: '1px solid #F8FBFF',
+        borderBottom: '1px solid #E0E0E0',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

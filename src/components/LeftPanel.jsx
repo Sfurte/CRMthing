@@ -1,10 +1,16 @@
+import { useState, useEffect } from 'react';
 import useStore, { selectActivePageElements } from '../store';
+import { elementDefinitions } from '../elements/registry';
+
+// Build label lookup: type → label
+const labelByType = {};
+elementDefinitions.forEach((d) => { labelByType[d.type] = d.label; });
 
 const styles = {
   panel: {
     width: 359,
     background: '#FFFFFF',
-    borderRight: '1px solid #F8FBFF',
+    borderRight: '1px solid #E0E0E0',
     padding: '16px 20px',
     display: 'flex',
     flexDirection: 'column',
@@ -26,14 +32,6 @@ const styles = {
     lineHeight: '20px',
     color: '#202020',
     marginBottom: 6,
-  },
-  selectedInfo: {
-    fontFamily: 'Inter',
-    fontSize: 14,
-    fontWeight: 400,
-    color: '#525252',
-    lineHeight: '20px',
-    marginBottom: 16,
   },
   inputGroup: {
     marginBottom: 16,
@@ -69,17 +67,48 @@ export default function LeftPanel() {
 
   const selectedElement = elements.find((el) => el.id === selectedId);
 
+  // Local state for input fields so the user can freely edit them
+  const [xStr, setXStr] = useState('');
+  const [yStr, setYStr] = useState('');
+
+  // Sync local state from store whenever the element or position changes
+  useEffect(() => {
+    if (selectedElement) {
+      setXStr(String(Math.round(selectedElement.x)));
+      setYStr(String(Math.round(selectedElement.y)));
+    }
+  }, [selectedElement?.id, selectedElement?.x, selectedElement?.y]);
+
   const handleXChange = (e) => {
-    const val = parseFloat(e.target.value);
+    const raw = e.target.value;
+    setXStr(raw);
+    const val = parseFloat(raw);
     if (!isNaN(val) && selectedElement) {
       setElementPosition(selectedElement.id, val, selectedElement.y);
     }
   };
 
   const handleYChange = (e) => {
-    const val = parseFloat(e.target.value);
+    const raw = e.target.value;
+    setYStr(raw);
+    const val = parseFloat(raw);
     if (!isNaN(val) && selectedElement) {
       setElementPosition(selectedElement.id, selectedElement.x, val);
+    }
+  };
+
+  const commitX = () => {
+    const val = parseFloat(xStr);
+    if (isNaN(val) && selectedElement) {
+      // Rollback to stored value
+      setXStr(String(Math.round(selectedElement.x)));
+    }
+  };
+
+  const commitY = () => {
+    const val = parseFloat(yStr);
+    if (isNaN(val) && selectedElement) {
+      setYStr(String(Math.round(selectedElement.y)));
     }
   };
 
@@ -89,16 +118,14 @@ export default function LeftPanel() {
 
       {selectedElement ? (
         <div>
-          <div style={styles.sectionLabel}>{selectedElement.type}</div>
-          <div style={styles.selectedInfo}>
-            id: {selectedElement.id}
-          </div>
+          <div style={styles.sectionLabel}>{labelByType[selectedElement.type] || selectedElement.type}</div>
           <div style={styles.inputGroup}>
             <label style={styles.label}>PosX</label>
             <input
               type="number"
-              value={Math.round(selectedElement.x)}
+              value={xStr}
               onChange={handleXChange}
+              onBlur={commitX}
               style={styles.input}
             />
           </div>
@@ -106,8 +133,9 @@ export default function LeftPanel() {
             <label style={styles.label}>PosY</label>
             <input
               type="number"
-              value={Math.round(selectedElement.y)}
+              value={yStr}
               onChange={handleYChange}
+              onBlur={commitY}
               style={styles.input}
             />
           </div>

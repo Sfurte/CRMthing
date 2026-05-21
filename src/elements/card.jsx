@@ -1,6 +1,6 @@
 ﻿export const definition = {
   type: 'Card',
-  label: 'Card',
+  label: 'Карточка',
 };
 
 export default function CardElement() {
@@ -17,7 +17,7 @@ export default function CardElement() {
       color: '#525252',
       boxShadow: '0px 1px 2px rgba(0,0,0,0.05)',
     }}>
-      Card content
+      Содержимое карточки
     </div>
   );
 }

@@ -1,0 +1,318 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.dashboard-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.dashboard-content {
+  flex: 1;
+  background-color: #F0F7FF;
+  padding: 30px 40px;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  margin-bottom: 20px;
+}
+
+.dashboard-title {
+  font-size: 28px;
+  color: #202020;
+  margin: 0;
+  font-family: Inter, sans-serif;
+}
+
+/* Last project section */
+.dashboard-last-section {
+  margin-bottom: 30px;
+}
+
+.dashboard-last-title {
+  color: #525252;
+  font-size: 18px;
+  margin-bottom: 12px;
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+}
+
+.dashboard-last-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  max-width: 600px;
+  border: 1px solid #e8ecf0;
+}
+
+.dashboard-last-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-last-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1a1f36;
+  font-family: Inter, sans-serif;
+}
+
+.dashboard-last-description {
+  color: #697386;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+}
+
+.dashboard-last-time {
+  color: #8a94a6;
+  font-size: 12px;
+  font-family: Inter, sans-serif;
+}
+
+/* "Все проекты" title */
+.dashboard-all-title {
+  color: #525252;
+  font-size: 18px;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+}
+
+/* Search section */
+.dashboard-search-section {
+  margin-bottom: 30px;
+}
+
+.dashboard-search-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-search-input {
+  width: 400px;
+  padding: 0 16px;
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: white;
+  height: 48px;
+  font-family: Inter, sans-serif;
+}
+
+.dashboard-search-input:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0px 0px 0px 3px rgba(59, 130, 246, 0.15);
+}
+
+.dashboard-search-input::placeholder {
+  color: #999;
+}
+
+.dashboard-filter-btn {
+  padding: 0 24px;
+  background-color: white;
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+  height: 48px;
+  font-family: Inter, sans-serif;
+}
+
+.dashboard-filter-btn:hover {
+  background-color: #f0f2f5;
+  border-color: #3B82F6;
+}
+
+.dashboard-create-btn {
+  background-color: #3B82F6;
+  color: white;
+  border: none;
+  padding: 0 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  height: 48px;
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.dashboard-create-btn:hover {
+  background-color: #2563EB;
+}
+
+/* Projects grid */
+.dashboard-projects-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* Project card */
+.dashboard-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e8ecf0;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card-title {
+  margin-bottom: 8px;
+  color: #1a1f36;
+  font-size: 18px;
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+}
+
+.dashboard-card-description {
+  color: #697386;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+}
+
+.dashboard-card-time {
+  color: #8a94a6;
+  font-size: 12px;
+  font-family: Inter, sans-serif;
+}
+
+/* No projects */
+.dashboard-no-projects {
+  text-align: center;
+  padding: 50px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  color: #697386;
+  grid-column: 1 / -1;
+}
+
+.dashboard-no-projects-hint {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-top: 8px;
+}
+
+/* Modal */
+.dashboard-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dashboard-modal {
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  width: 450px;
+  max-width: 90%;
+}
+
+.dashboard-modal-title {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #1a1f36;
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+}
+
+.dashboard-modal-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  font-family: Inter, sans-serif;
+}
+
+.dashboard-modal-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+  box-sizing: border-box;
+}
+
+.dashboard-modal-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.dashboard-modal-input:focus,
+.dashboard-modal-textarea:focus {
+  outline: none;
+  border-color: #3B82F6;
+}
+
+.dashboard-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.dashboard-modal-btn-cancel {
+  padding: 10px 20px;
+  background-color: #f0f2f5;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+}
+
+.dashboard-modal-btn-cancel:hover {
+  background-color: #e8ecf0;
+}
+
+.dashboard-modal-btn-save {
+  padding: 10px 20px;
+  background-color: #3B82F6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dashboard-modal-btn-save:hover {
+  background-color: #2563EB;
+}

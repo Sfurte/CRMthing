@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export const definition = {
   type: 'Input',
-  label: 'Input',
+  label: 'Поле ввода',
 };
 
 export default function InputElement() {
@@ -29,12 +29,12 @@ export default function InputElement() {
         color: '#374151',
         fontSize: 12,
       }}>
-        Label
+        Текст
       </label>
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Enter text..."
+        placeholder="Введите текст..."
         style={{
           width: '100%',
           border: '1px solid #d1d5db',

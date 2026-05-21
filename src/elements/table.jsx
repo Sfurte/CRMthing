@@ -1,6 +1,6 @@
 ﻿export const definition = {
   type: 'Table',
-  label: 'Table',
+  label: 'Таблица',
 };
 
 export default function TableElement() {
@@ -19,7 +19,7 @@ export default function TableElement() {
       color: '#666',
       userSelect: 'none',
     }}>
-      Table
+      Таблица
     </div>
   );
 }

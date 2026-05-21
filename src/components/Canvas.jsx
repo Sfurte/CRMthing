@@ -11,7 +11,7 @@ import useCombinedRef from '../hooks/useCombinedRef';
 import { ARTBOARD_WIDTH, ARTBOARD_HEIGHT } from '../constants';
 import { useTransformRef } from '../contexts/TransformContext';
 
-export default function Canvas({ canvasRectRef }) {
+export default function Canvas({ canvasRectRef, onElementContextMenu }) {
   const elements = useStore(selectActivePageElements);
   const selectElement = useStore((s) => s.selectElement);
 
@@ -83,7 +83,7 @@ export default function Canvas({ canvasRectRef }) {
           }}
         >
           {elements.map((el) => (
-            <DraggableElement key={el.id} element={el} zoom={zoom} />
+            <DraggableElement key={el.id} element={el} zoom={zoom} onContextMenu={onElementContextMenu} />
           ))}
         </div>
       </div>
