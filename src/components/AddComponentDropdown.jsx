@@ -1,100 +1,127 @@
 /**
- * Dropdown to add a new component to the canvas.
- * Click an item to add it at a default position (200, 200).
+ * AddComponentDropdown – a dropdown menu for adding new elements to the canvas.
+ * Triggered from the toolbar "+" button.
  */
 import { useState, useRef } from 'react';
-import { elementDefinitions } from '../elements/registry';
+import { ELEMENT_DEFINITIONS } from '../elements'; // ✅ Исправлено: импорт из index.js
 import useStore from '../store';
 import useClickOutside from '../hooks/useClickOutside';
 
-const btnStyle = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '8px 14px',
-  gap: 8,
-  borderRadius: 8,
-  border: 'none',
-  cursor: 'pointer',
-  fontFamily: 'Inter',
-  fontSize: 14,
-  fontWeight: 400,
-  color: '#202020',
-  background: 'transparent',
+const styles = {
+  dropdown: {
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    marginTop: 8,
+    width: 280,
+    background: '#FFFFFF',
+    border: '1px solid #E0E0E0',
+    borderRadius: 12,
+    boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.12)',
+    zIndex: 1000,
+    overflow: 'hidden',
+    fontFamily: 'Inter',
+  },
+  header: {
+    padding: '12px 16px',
+    borderBottom: '1px solid #F0F0F0',
+    fontWeight: 500,
+    fontSize: 14,
+    color: '#202020',
+  },
+  list: {
+    listStyle: 'none',
+    margin: 0,
+    padding: 8,
+    maxHeight: 400,
+    overflowY: 'auto',
+  },
+  item: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: '10px 12px',
+    borderRadius: 8,
+    cursor: 'pointer',
+    transition: 'background 0.15s',
+    fontSize: 14,
+    color: '#202020',
+  },
+  itemHover: {
+    background: '#F5F5F5',
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#1677ff',
+  },
+  empty: {
+    padding: '16px',
+    textAlign: 'center',
+    color: '#999',
+    fontSize: 13,
+  },
 };
 
-const chevronStyle = {
-  width: 20,
-  height: 20,
-};
-
-const dropdownItemStyle = {
-  padding: '10px 14px',
-  background: '#FFFFFF',
-  border: 'none',
-  cursor: 'pointer',
-  fontFamily: 'Inter',
-  fontSize: 16,
-  fontWeight: 400,
-  color: '#202020',
-  width: '100%',
-  textAlign: 'left',
-};
-
-const dropdownItemHoverStyle = {
-  background: '#F0F7FF',
-};
-
-export default function AddComponentDropdown() {
+export default function AddComponentDropdown({ anchorRef, onClose }) {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const addElement = useStore((s) => s.addElement);
-  const [open, setOpen] = useState(false);
-  const [hoveredIdx, setHoveredIdx] = useState(null);
-  const ref = useRef(null);
+  const dropdownRef = useRef(null);
 
-  useClickOutside(ref, () => setOpen(false));
+  // Закрыть при клике вне
+  useClickOutside(dropdownRef, onClose);
+
+  // Позиционирование относительно кнопки
+  const dropdownStyle = { ...styles.dropdown };
+  if (anchorRef?.current) {
+    const rect = anchorRef.current.getBoundingClientRect();
+    dropdownStyle.top = rect.bottom + 8;
+    dropdownStyle.right = window.innerWidth - rect.right;
+  }
+
+  const handleSelect = (type) => {
+    // Добавляем элемент в центр видимой области (упрощённо)
+    // В реальном приложении здесь нужно вычислять координаты относительно канваса
+    const x = 100; 
+    const y = 100;
+    addElement(type, x, y);
+    onClose?.();
+  };
 
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
-      <button style={btnStyle} onClick={() => setOpen(!open)}>
-        Добавить компонент
-        <svg style={chevronStyle} viewBox="0 0 24 24" fill="none">
-          <path d="M6 9L12 15L18 9" stroke="#202020" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
-      {open && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            minWidth: 200,
-            background: '#FFFFFF',
-            border: '1px solid #D4D4D4',
-            borderRadius: 8,
-            boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
-            zIndex: 1000,
-            overflow: 'hidden',
-          }}
-        >
-          {elementDefinitions.map((def, i) => (
-            <button
-              key={def.type}
-              style={{
-                ...dropdownItemStyle,
-                ...(hoveredIdx === i ? dropdownItemHoverStyle : {}),
-              }}
-              onMouseEnter={() => setHoveredIdx(i)}
-              onMouseLeave={() => setHoveredIdx(null)}
-              onClick={() => {
-                addElement(def.type, 200, 200);
-                setOpen(false);
-              }}
-            >
-              {def.label}
-            </button>
-          ))}
-        </div>
+    <div ref={dropdownRef} style={dropdownStyle}>
+      <div style={styles.header}>Добавить компонент</div>
+      
+      {ELEMENT_DEFINITIONS.length > 0 ? (
+        <ul style={styles.list}>
+          {ELEMENT_DEFINITIONS.map((def, index) => {
+            const Icon = def.icon;
+            return (
+              <li
+                key={def.type}
+                style={{
+                  ...styles.item,
+                  ...(hoveredIndex === index ? styles.itemHover : {}),
+                }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => handleSelect(def.type)}
+              >
+                {Icon && (
+                  <span style={styles.icon}>
+                    <Icon />
+                  </span>
+                )}
+                <span>{def.label}</span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <div style={styles.empty}>Нет доступных компонентов</div>
       )}
     </div>
   );

@@ -1,23 +1,35 @@
-﻿export const definition = {
+﻿import { Card } from 'antd';
+import { CreditCardOutlined } from '@ant-design/icons';
+
+export const definition = {
   type: 'Card',
   label: 'Карточка',
+  icon: CreditCardOutlined,
+  defaultProps: {
+    title: 'Заголовок',
+    content: 'Текст карточки',
+  },
+  properties: [
+    { name: 'title', label: 'Заголовок', type: 'text' },
+    { name: 'content', label: 'Текст', type: 'textarea' },
+  ],
 };
 
-export default function CardElement() {
+export default function CardElement({ element, isSelected }) {
+  const { title, content } = element.props || {};
+
   return (
-    <div style={{
-      width: 220,
-      padding: 12,
-      background: '#FFFFFF',
-      border: '1px solid #D4D4D4',
-      borderRadius: 8,
-      fontFamily: 'Inter',
-      fontSize: 14,
-      lineHeight: '20px',
-      color: '#525252',
-      boxShadow: '0px 1px 2px rgba(0,0,0,0.05)',
-    }}>
-      Содержимое карточки
-    </div>
+    <Card 
+      title={title} 
+      style={{ 
+        width: '100%', 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column' 
+      }}
+      bodyStyle={{ flex: 1, overflow: 'auto' }}
+    >
+      {content}
+    </Card>
   );
 }

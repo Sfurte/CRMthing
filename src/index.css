@@ -1,4 +1,5 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import 'antd/dist/reset.css';
 
 * {
   margin: 0;
@@ -20,4 +21,181 @@ input:focus {
   outline: none;
   border-color: #3B82F6;
   box-shadow: 0px 0px 0px 3px rgba(59, 130, 246, 0.15);
+}
+
+/* =========================================
+   Ant Design overrides & canvas styles
+   ========================================= */
+
+/* Canvas elements */
+.canvas-element {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+  transition: outline 0.2s ease;
+}
+
+.canvas-element:hover {
+  outline: 2px dashed #1890ff;
+  outline-offset: 2px;
+}
+
+.canvas-element.selected {
+  outline: 2px solid #1890ff;
+  outline-offset: 2px;
+  z-index: 10;
+}
+
+/* Drag overlay */
+.drag-overlay {
+  opacity: 0.6;
+  background: #f0f5ff;
+  border: 2px dashed #1890ff;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+/* Sidebar / palette items */
+.palette-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: grab;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.palette-item:hover {
+  background: #e6f4ff;
+}
+
+.palette-item:active {
+  cursor: grabbing;
+}
+
+/* Ant Design components on canvas */
+.canvas-element .ant-btn,
+.canvas-element .ant-input,
+.canvas-element .ant-card,
+.canvas-element .ant-table {
+  pointer-events: auto;
+}
+
+/* Disable interactions when element is selected (for dragging) */
+.canvas-element.selected .ant-input input,
+.canvas-element.selected .ant-input-affix-wrapper,
+.canvas-element.selected .ant-btn,
+.canvas-element.selected .ant-card,
+.canvas-element.selected .ant-table {
+  pointer-events: none;
+}
+
+/* Allow editing when explicitly in edit mode */
+.canvas-element.edit-mode .ant-input input {
+  pointer-events: auto;
+}
+
+/* Typography */
+.canvas-element .ant-typography {
+  margin: 0;
+}
+
+/* Table adjustments */
+.canvas-element .ant-table {
+  background: transparent;
+}
+
+.canvas-element .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-size: 12px;
+  padding: 8px 12px;
+}
+
+.canvas-element .ant-table-tbody > tr > td {
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+/* Card adjustments */
+.canvas-element .ant-card {
+  margin: 0;
+}
+
+.canvas-element .ant-card-head {
+  min-height: 36px;
+  padding: 0 12px;
+}
+
+.canvas-element .ant-card-head-title {
+  font-size: 13px;
+  padding: 8px 0;
+}
+
+.canvas-element .ant-card-body {
+  padding: 12px;
+  font-size: 13px;
+}
+
+/* Input label */
+.canvas-element .input-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 4px;
+  user-select: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* ... существующие стили ... */
+
+/* Стили для Ant Design Charts */
+.ant-charts-container {
+  background: #fff;
+}
+
+.ant-charts-container .ant-chart-tooltip {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Адаптивность для графиков */
+.canvas-element .ant-chart {
+  overflow: visible;
+}
+
+/* Анимация при выделении */
+.canvas-element.selected .ant-charts-container {
+  outline: 2px solid #1890ff;
+  outline-offset: 2px;
+  border-radius: 8px;
 }

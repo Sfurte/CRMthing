@@ -1,21 +1,29 @@
-﻿// Auto-discover all element files in this directory (except registry.js)
-const elementModules = import.meta.glob('./*.jsx', { eager: true });
+﻿import ButtonElement, { definition as buttonDef } from './button';
+import CardElement, { definition as cardDef } from './card';
+import InputElement, { definition as inputDef } from './input';
+import TextElement, { definition as textDef } from './text';
+import TableElement, { definition as tableDef } from './table';
+import GridElement, { definition as gridDef } from './grid';
 
-const ElementRenderers = {};
-const elementDefinitions = [];
+// Карта компонентов для рендеринга на доске
+export const ELEMENTS = {
+  Button: ButtonElement,
+  Card: CardElement,
+  Input: InputElement,
+  Text: TextElement,
+  Table: TableElement,
+  Grid: GridElement,
+};
 
-for (const [path, mod] of Object.entries(elementModules)) {
-  // Skip registry.js itself
-  if (path === './registry.js' || path === './registry.jsx') continue;
+// Список определений для меню (сайдбара)
+export const ELEMENT_DEFINITIONS = [
+  buttonDef,
+  cardDef,
+  inputDef,
+  textDef,
+  tableDef,
+  gridDef,
+];
 
-  const Component = mod.default;
-  const def = mod.definition;
-
-  if (Component && def) {
-    ElementRenderers[def.type] = Component;
-    elementDefinitions.push(def);
-  }
-}
-
-export { ElementRenderers, elementDefinitions };
-export const ELEMENT_TYPES = elementDefinitions.map((d) => d.type);
+// Для совместимости со старым кодом
+export const elementDefinitions = ELEMENT_DEFINITIONS;
