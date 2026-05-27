@@ -1,11 +1,11 @@
-﻿import ButtonElement, { definition as buttonDef } from './button';
+import ButtonElement, { definition as buttonDef } from './button';
 import CardElement, { definition as cardDef } from './card';
 import InputElement, { definition as inputDef } from './input';
 import TextElement, { definition as textDef } from './text';
 import TableElement, { definition as tableDef } from './table';
 import GridElement, { definition as gridDef } from './grid';
+import ImageElement, { definition as imageDef } from './image';
 
-// Карта компонентов для рендеринга на доске
 export const ELEMENTS = {
   Button: ButtonElement,
   Card: CardElement,
@@ -13,9 +13,9 @@ export const ELEMENTS = {
   Text: TextElement,
   Table: TableElement,
   Grid: GridElement,
+  Image: ImageElement,
 };
 
-// Список определений для меню (сайдбара)
 export const ELEMENT_DEFINITIONS = [
   buttonDef,
   cardDef,
@@ -23,7 +23,5 @@ export const ELEMENT_DEFINITIONS = [
   textDef,
   tableDef,
   gridDef,
+  imageDef,
 ];
-
-// Для совместимости со старым кодом
-export const elementDefinitions = ELEMENT_DEFINITIONS;

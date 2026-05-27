@@ -4,6 +4,7 @@ import { DndContext } from '@dnd-kit/core';
 import Header from '../components/Header';
 import LeftPanel from '../components/LeftPanel';
 import Toolbar from '../components/Toolbar';
+import TopBar from '../components/TopBar';
 import Canvas from '../components/Canvas';
 import PagesInspector from '../components/PagesInspector';
 import useStore from '../store';
@@ -40,7 +41,6 @@ function EditorContent() {
     openProject(projectId);
   }, [projectId]);
 
-  // Close context menu on Escape
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') setContextMenu(null);
@@ -81,7 +81,6 @@ function EditorContent() {
     (event) => {
       const { active, over, delta } = event;
 
-      // Minimal movement -> selection (not a drag)
       if (Math.abs(delta.x) < 5 && Math.abs(delta.y) < 5) {
         const data = active.data.current;
         if (data?.isCanvasElement) {
@@ -90,10 +89,8 @@ function EditorContent() {
         }
       }
 
-      // Dropped somewhere other than the canvas -> ignore
       if (!over || over.id !== 'canvas') return;
 
-      // Dropped from palette? (data.type is set only for new elements)
       const data = active.data.current;
       if (!data?.type) return;
 
@@ -119,10 +116,23 @@ function EditorContent() {
     setContextMenu({ elementId, x: e.clientX, y: e.clientY });
   }, []);
 
+  const handleTopBarElementSelect = useCallback((type) => {
+    // Элемент уже добавлен в handleMenuClick внутри TopBar
+    // Здесь можно добавить дополнительную логику, если нужно
+    console.log('Element added from TopBar:', type);
+  }, []);
+
   return (
     <DndContext onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Header title={projects[projectId]?.name || 'Dashboard'} onBack={() => navigate('/')} />
+        
+        {/* Новая верхняя панель с Dropdown */}
+        <TopBar 
+          onElementSelect={handleTopBarElementSelect}
+          projectName={projects[projectId]?.name}
+        />
+        
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           <LeftPanel />
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
@@ -135,16 +145,13 @@ function EditorContent() {
         </div>
       </div>
 
-      {/* Context menu overlay */}
       {contextMenu && (
         <>
-          {/* Transparent backdrop — click/right-click to close */}
           <div
             style={{ position: 'fixed', inset: 0, zIndex: 9999 }}
             onClick={() => setContextMenu(null)}
             onContextMenu={(e) => { e.preventDefault(); setContextMenu(null); }}
           />
-          {/* The menu itself */}
           <div
             style={{
               position: 'fixed',

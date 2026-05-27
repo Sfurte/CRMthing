@@ -1,52 +1,51 @@
-import { useState } from 'react';
+import { Input } from 'antd';
+import { FormOutlined } from '@ant-design/icons';
 
 export const definition = {
   type: 'Input',
   label: 'Поле ввода',
+  icon: FormOutlined,
+  defaultProps: {
+    label: 'Текст',
+    placeholder: 'Введите текст...',
+    size: 'middle',
+    showLabel: true,
+  },
+  properties: [
+    { name: 'label', label: 'Подпись', type: 'text' },
+    { name: 'placeholder', label: 'Плейсхолдер', type: 'text' },
+    { name: 'size', label: 'Размер', type: 'select', options: ['large', 'middle', 'small'] },
+    { name: 'showLabel', label: 'Показывать подпись', type: 'checkbox' },
+  ],
 };
 
-export default function InputElement() {
-  const [value, setValue] = useState('');
+export default function InputElement({ element, isSelected }) {
+  const { label = 'Текст', placeholder, size = 'middle', showLabel = true } = element.props || {};
 
   return (
     <div style={{
-      width: 200,
-      minHeight: 70,
       display: 'flex',
       flexDirection: 'column',
       gap: 4,
-      padding: '8px 10px',
-      borderRadius: 6,
-      background: '#fff',
-      border: '1px solid #d1d5db',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-      fontFamily: 'Inter',
-      fontSize: 13,
-      userSelect: 'none',
+      width: 200,
+      pointerEvents: isSelected ? 'none' : 'auto',
     }}>
-      <label style={{
-        fontWeight: 500,
-        color: '#374151',
-        fontSize: 12,
-      }}>
-        Текст
-      </label>
-      <input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Введите текст..."
-        style={{
-          width: '100%',
-          border: '1px solid #d1d5db',
-          borderRadius: 4,
-          padding: '6px 8px',
-          fontSize: 13,
-          fontFamily: 'Inter',
-          outline: 'none',
-          boxSizing: 'border-box',
-        }}
+      {showLabel && (
+        <label style={{
+          fontWeight: 500,
+          color: '#374151',
+          fontSize: 12,
+          userSelect: 'none',
+        }}>
+          {label}
+        </label>
+      )}
+      <Input
+        placeholder={placeholder}
+        size={size}
         onMouseDown={(e) => e.stopPropagation()}
-        onClick={(e) => e.stopPropagation()}
+        onFocus={(e) => e.stopPropagation()}
+        style={{ width: '100%' }}
       />
     </div>
   );
