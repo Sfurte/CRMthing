@@ -177,3 +177,25 @@ input:focus {
   align-items: center;
   justify-content: center;
 }
+/* ... существующие стили ... */
+
+/* Стили для Ant Design Charts */
+.ant-charts-container {
+  background: #fff;
+}
+
+.ant-charts-container .ant-chart-tooltip {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Адаптивность для графиков */
+.canvas-element .ant-chart {
+  overflow: visible;
+}
+
+/* Анимация при выделении */
+.canvas-element.selected .ant-charts-container {
+  outline: 2px solid #1890ff;
+  outline-offset: 2px;
+  border-radius: 8px;
+}

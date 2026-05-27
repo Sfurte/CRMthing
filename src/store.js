@@ -167,6 +167,9 @@ const useStore = create(
             x, 
             y, 
             zIndex: ++zCounter,
+            // Добавляем размеры по умолчанию
+            width: def?.defaultWidth || 200,
+            height: def?.defaultHeight || 100,
             props: defaultProps,
           };
           return {
@@ -221,6 +224,34 @@ const useStore = create(
                     ...page,
                     elements: page.elements.map((el) =>
                       el.id === id ? { ...el, x, y } : el
+                    ),
+                  },
+                },
+              },
+            },
+          };
+        }),
+
+      // Новое действие для изменения размера
+        resizeElement: (id, newWidth, newHeight) =>
+        set((state) => {
+          const page = getActivePage(state);
+          if (!page) return state;
+          return {
+            projects: {
+              ...state.projects,
+              [state.activeProjectId]: {
+                ...state.projects[state.activeProjectId],
+                pages: {
+                  ...state.projects[state.activeProjectId].pages,
+                  [state.activePageId]: {
+                    ...page,
+                    elements: page.elements.map((el) =>
+                      el.id === id ? { 
+                        ...el, 
+                        width: Math.max(20, newWidth),
+                        height: Math.max(20, newHeight)
+                      } : el
                     ),
                   },
                 },
