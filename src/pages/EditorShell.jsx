@@ -4,7 +4,6 @@ import { DndContext } from '@dnd-kit/core';
 import Header from '../components/Header';
 import LeftPanel from '../components/LeftPanel';
 import Toolbar from '../components/Toolbar';
-import TopBar from '../components/TopBar';
 import Canvas from '../components/Canvas';
 import PagesInspector from '../components/PagesInspector';
 import useStore from '../store';
@@ -31,7 +30,7 @@ function EditorContent() {
   const transformRef = useTransformRef();
   const canvasRectRef = useRef(null);
 
-  const [contextMenu, setContextMenu] = useState(null);
+  const [contextTargetId, setContextTargetId] = useState(null);
 
   useEffect(() => {
     if (!projects[projectId]) {
@@ -41,17 +40,36 @@ function EditorContent() {
     openProject(projectId);
   }, [projectId]);
 
+  // Close context menu on every mousedown except on action bar buttons
+  useEffect(() => {
+    const handler = (e) => {
+      // Don't close if clicking on an action bar button
+      if (e.target.closest('[data-context-action]')) return;
+      setContextTargetId(null);
+    };
+    window.addEventListener('mousedown', handler);
+    return () => window.removeEventListener('mousedown', handler);
+  }, []);
+
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape') setContextMenu(null);
+      if (e.key === 'Escape') {
+        selectElement(null);
+        setContextTargetId(null);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [selectElement]);
 
   if (!projects[projectId]) {
     return null;
   }
+
+  const closeContext = useCallback(() => {
+    selectElement(null);
+    setContextTargetId(null);
+  }, [selectElement]);
 
   const handleDragMove = useCallback(
     (event) => {
@@ -77,17 +95,17 @@ function EditorContent() {
     [setElementPosition]
   );
 
+  const handleDragStart = useCallback((event) => {
+    const { active } = event;
+    const data = active.data.current;
+    if (data?.isCanvasElement) {
+      selectElement(active.id);
+    }
+  }, [selectElement]);
+
   const handleDragEnd = useCallback(
     (event) => {
-      const { active, over, delta } = event;
-
-      if (Math.abs(delta.x) < 5 && Math.abs(delta.y) < 5) {
-        const data = active.data.current;
-        if (data?.isCanvasElement) {
-          selectElement(active.id);
-          return;
-        }
-      }
+      const { active, over } = event;
 
       if (!over || over.id !== 'canvas') return;
 
@@ -113,83 +131,30 @@ function EditorContent() {
   const handleElementContextMenu = useCallback((e, elementId) => {
     e.preventDefault();
     e.stopPropagation();
-    setContextMenu({ elementId, x: e.clientX, y: e.clientY });
-  }, []);
-
-  const handleTopBarElementSelect = useCallback((type) => {
-    // Элемент уже добавлен в handleMenuClick внутри TopBar
-    // Здесь можно добавить дополнительную логику, если нужно
-    console.log('Element added from TopBar:', type);
+    setContextTargetId(elementId);
   }, []);
 
   return (
-    <DndContext onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
+    <DndContext onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Header title={projects[projectId]?.name || 'Dashboard'} onBack={() => navigate('/')} />
-        
-        {/* Новая верхняя панель с Dropdown */}
-        <TopBar 
-          onElementSelect={handleTopBarElementSelect}
-          projectName={projects[projectId]?.name}
-        />
         
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           <LeftPanel />
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
             <Toolbar />
             <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-              <Canvas canvasRectRef={canvasRectRef} onElementContextMenu={handleElementContextMenu} />
+              <Canvas
+                canvasRectRef={canvasRectRef}
+                onElementContextMenu={handleElementContextMenu}
+                contextTargetId={contextTargetId}
+                onCloseContext={closeContext}
+              />
             </div>
           </div>
           <PagesInspector />
         </div>
       </div>
-
-      {contextMenu && (
-        <>
-          <div
-            style={{ position: 'fixed', inset: 0, zIndex: 9999 }}
-            onClick={() => setContextMenu(null)}
-            onContextMenu={(e) => { e.preventDefault(); setContextMenu(null); }}
-          />
-          <div
-            style={{
-              position: 'fixed',
-              left: contextMenu.x,
-              top: contextMenu.y,
-              zIndex: 10000,
-              background: '#FFFFFF',
-              border: '1px solid #E0E0E0',
-              borderRadius: 8,
-              boxShadow: '0px 4px 12px rgba(0,0,0,0.15)',
-              padding: '4px 0',
-              minWidth: 160,
-            }}
-          >
-            <button
-              onClick={() => {
-                removeElement(contextMenu.elementId);
-                setContextMenu(null);
-              }}
-              style={{
-                width: '100%',
-                padding: '10px 16px',
-                border: 'none',
-                background: 'transparent',
-                cursor: 'pointer',
-                fontFamily: 'Inter',
-                fontSize: 14,
-                color: '#EF4444',
-                textAlign: 'left',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#FFF5F5'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
-            >
-              🗑️ Удалить
-            </button>
-          </div>
-        </>
-      )}
     </DndContext>
   );
 }

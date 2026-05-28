@@ -1,45 +1,67 @@
 /**
  * Toolbar – the horizontal bar between Header and Canvas.
- * Contains the Add Component dropdown, filter buttons, and zoom control.
  */
-import AddComponentDropdown from './AddComponentDropdown';
+import { Dropdown, Button } from 'antd';
+import { PlusOutlined, DownOutlined } from '@ant-design/icons';
+import { ELEMENT_DEFINITIONS } from '../elements';
+import useStore from '../store';
 import ZoomControl from './ZoomControl';
 
 const dividerStyle = {
   width: 0,
   height: 18,
-  border: '1px solid #ACACAC',
+  borderLeft: '1px solid #ACACAC',
 };
 
-const btnStyle = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '8px 14px',
-  gap: 8,
-  borderRadius: 8,
-  border: 'none',
-  cursor: 'pointer',
-  fontFamily: 'Inter',
-  fontSize: 14,
-  fontWeight: 400,
-  color: '#202020',
-  background: 'transparent',
+/** Map element types to category keys */
+const typeToCategory = {
+  Table: 'data',
+  Chart: 'data',
+  Button: 'form',
+  Input: 'form',
+  Grid: 'structure',
+  Card: 'structure',
+  Text: 'design',
+  Image: 'design',
 };
 
-const chevronStyle = {
-  width: 20,
-  height: 20,
-};
-
-const ITEMS = [
-  { text: 'Layout' },
-  { text: 'Данные' },
-  { text: 'Desktop' },
+const categories = [
+  { key: 'data', label: 'Данные' },
+  { key: 'form', label: 'Форма' },
+  { key: 'structure', label: 'Структура' },
+  { key: 'design', label: 'Дизайн' },
 ];
 
 export default function Toolbar() {
+  const addElement = useStore((s) => s.addElement);
+
+  /** Build a lookup: type → definition */
+  const defByType = {};
+  ELEMENT_DEFINITIONS.forEach((d) => { defByType[d.type] = d; });
+
+  const menuItems = categories.map((cat) => ({
+    key: cat.key,
+    label: cat.label,
+    children: ELEMENT_DEFINITIONS
+      .filter((d) => typeToCategory[d.type] === cat.key)
+      .map((def) => ({
+        key: def.type,
+        label: (
+          <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {def.icon && <def.icon />}
+            <span>{def.label}</span>
+          </span>
+        ),
+      })),
+  }));
+
+  const handleMenuClick = ({ key: type }) => {
+    if (!defByType[type]) return; // ignore category clicks
+    const x = 100 + Math.random() * 200;
+    const y = 100 + Math.random() * 100;
+    addElement(type, x, y);
+  };
+
   return (
     <div
       style={{
@@ -53,19 +75,20 @@ export default function Toolbar() {
         gap: 8,
       }}
     >
-      <AddComponentDropdown />
-      <div style={dividerStyle} />
-      {ITEMS.map((item, i) => (
-        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button style={btnStyle}>
-            {item.text}
-            <svg style={chevronStyle} viewBox="0 0 24 24" fill="none">
-              <path d="M6 9L12 15L18 9" stroke="#202020" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          {i < ITEMS.length - 1 && <div style={dividerStyle} />}
-        </div>
-      ))}
+      <Dropdown
+        menu={{
+          items: menuItems,
+          onClick: handleMenuClick,
+          style: { minWidth: 200 },
+        }}
+        trigger={['click']}
+      >
+        <Button icon={<PlusOutlined />}>
+          Добавить компонент
+          <DownOutlined />
+        </Button>
+      </Dropdown>
+
       <div style={dividerStyle} />
       <ZoomControl />
     </div>
