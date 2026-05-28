@@ -91,14 +91,12 @@ const useStore = create(
 
       removeProject: (projectId) =>
         set((state) => {
-          const projIds = Object.keys(state.projects);
-          if (projIds.length <= 1) return state;
           const { [projectId]: removed, ...remaining } = state.projects;
           const remainingIds = Object.keys(remaining);
           return {
             projects: remaining,
-            activeProjectId: state.activeProjectId === projectId ? remainingIds[0] : state.activeProjectId,
-            activePageId: state.activeProjectId === projectId ? Object.values(remaining[remainingIds[0]].pages)[0]?.id : state.activePageId,
+            activeProjectId: state.activeProjectId === projectId ? (remainingIds[0] || null) : state.activeProjectId,
+            activePageId: remainingIds[0] && state.activeProjectId === projectId ? Object.values(remaining[remainingIds[0]].pages)[0]?.id : (remainingIds.length ? state.activePageId : null),
             selectedId: null,
           };
         }),
@@ -167,7 +165,6 @@ const useStore = create(
             x, 
             y, 
             zIndex: ++zCounter,
-            // Добавляем размеры по умолчанию
             width: def?.defaultWidth || 200,
             height: def?.defaultHeight || 100,
             props: defaultProps,
@@ -232,8 +229,7 @@ const useStore = create(
           };
         }),
 
-      // Новое действие для изменения размера
-        resizeElement: (id, newWidth, newHeight) =>
+      resizeElement: (id, newWidth, newHeight) =>
         set((state) => {
           const page = getActivePage(state);
           if (!page) return state;
@@ -284,10 +280,14 @@ const useStore = create(
           };
         }),
 
-      bringToFront: (id) =>
+      moveUp: (id) =>
         set((state) => {
           const page = getActivePage(state);
           if (!page) return state;
+          const sorted = [...page.elements].sort((a, b) => a.zIndex - b.zIndex);
+          const idx = sorted.findIndex((el) => el.id === id);
+          if (idx < 0 || idx >= sorted.length - 1) return state;
+          const above = sorted[idx + 1];
           return {
             projects: {
               ...state.projects,
@@ -297,9 +297,40 @@ const useStore = create(
                   ...state.projects[state.activeProjectId].pages,
                   [state.activePageId]: {
                     ...page,
-                    elements: page.elements.map((el) =>
-                      el.id === id ? { ...el, zIndex: ++zCounter } : el
-                    ),
+                    elements: page.elements.map((el) => {
+                      if (el.id === id) return { ...el, zIndex: above.zIndex };
+                      if (el.id === above.id) return { ...above, zIndex: el.zIndex };
+                      return el;
+                    }),
+                  },
+                },
+              },
+            },
+          };
+        }),
+
+      moveDown: (id) =>
+        set((state) => {
+          const page = getActivePage(state);
+          if (!page) return state;
+          const sorted = [...page.elements].sort((a, b) => a.zIndex - b.zIndex);
+          const idx = sorted.findIndex((el) => el.id === id);
+          if (idx <= 0) return state;
+          const below = sorted[idx - 1];
+          return {
+            projects: {
+              ...state.projects,
+              [state.activeProjectId]: {
+                ...state.projects[state.activeProjectId],
+                pages: {
+                  ...state.projects[state.activeProjectId].pages,
+                  [state.activePageId]: {
+                    ...page,
+                    elements: page.elements.map((el) => {
+                      if (el.id === id) return { ...el, zIndex: below.zIndex };
+                      if (el.id === below.id) return { ...below, zIndex: el.zIndex };
+                      return el;
+                    }),
                   },
                 },
               },

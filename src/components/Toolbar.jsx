@@ -46,17 +46,12 @@ export default function Toolbar() {
       .filter((d) => typeToCategory[d.type] === cat.key)
       .map((def) => ({
         key: def.type,
-        label: (
-          <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {def.icon && <def.icon />}
-            <span>{def.label}</span>
-          </span>
-        ),
+        label: def.label,
       })),
   }));
 
   const handleMenuClick = ({ key: type }) => {
-    if (!defByType[type]) return; // ignore category clicks
+    if (!defByType[type]) return;
     const x = 100 + Math.random() * 200;
     const y = 100 + Math.random() * 100;
     addElement(type, x, y);

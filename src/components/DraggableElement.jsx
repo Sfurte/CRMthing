@@ -16,6 +16,8 @@ export default function DraggableElement({ element, zoom, onContextMenu, showCon
   const selectedId = useStore((state) => state.selectedId);
   const selectElement = useStore((state) => state.selectElement);
   const removeElement = useStore((state) => state.removeElement);
+  const moveUp = useStore((state) => state.moveUp);
+  const moveDown = useStore((state) => state.moveDown);
   const isSelected = selectedId === element.id;
 
   const currentWidth = element.width || 200;
@@ -89,6 +91,10 @@ export default function DraggableElement({ element, zoom, onContextMenu, showCon
               cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               flex: 'none', order: 0, flexGrow: 0,
             }}
+            onClick={(e) => {
+              e.stopPropagation();
+              moveUp(element.id);
+            }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M12 5V19" stroke="#171717" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -100,6 +106,10 @@ export default function DraggableElement({ element, zoom, onContextMenu, showCon
               width: 18, height: 18, padding: 0, border: 'none', background: 'none',
               cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               flex: 'none', order: 1, flexGrow: 0,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              moveDown(element.id);
             }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
