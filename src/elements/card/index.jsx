@@ -1,4 +1,4 @@
-import styles from './Card.module.css';
+import { Card } from 'antd';
 
 export const definition = {
   type: 'Card',
@@ -7,8 +7,14 @@ export const definition = {
 
 export default function CardElement() {
   return (
-    <div className={styles.wrapper}>
-      Содержимое карточки
+    <div style={{ width: 300, padding: 4 }}>
+      <Card
+        size="small"
+        title="Заголовок карточки"
+        style={{ width: '100%' }}
+      >
+        <p>Содержимое карточки</p>
+      </Card>
     </div>
   );
 }

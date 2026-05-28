@@ -1,4 +1,4 @@
-import styles from './Button.module.css';
+import { Button } from 'antd';
 
 export const definition = {
   type: 'Button',
@@ -7,8 +7,10 @@ export const definition = {
 
 export default function ButtonElement() {
   return (
-    <div className={styles.wrapper}>
-      Кнопка
+    <div style={{ padding: 4 }}>
+      <Button type="primary" size="middle">
+        Кнопка
+      </Button>
     </div>
   );
 }

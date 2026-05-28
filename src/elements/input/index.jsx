@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from './Input.module.css';
+import { Input } from 'antd';
 
 export const definition = {
   type: 'Input',
@@ -10,15 +10,16 @@ export default function InputElement() {
   const [value, setValue] = useState('');
 
   return (
-    <div className={styles.wrapper}>
-      <label className={styles.label}>Текст</label>
-      <input
+    <div
+      style={{ width: 280, padding: 4 }}
+      onMouseDown={(e) => e.stopPropagation()}
+    >
+      <Input
+        placeholder="Введите текст..."
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Введите текст..."
-        className={styles.field}
-        onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       />
     </div>
   );
