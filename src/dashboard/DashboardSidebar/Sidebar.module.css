@@ -1,0 +1,71 @@
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--color-bg-white);
+  border-right: 1px solid #e8ecf0;
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+}
+
+.name {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+  color: var(--color-card-text);
+  font-family: var(--font-family);
+}
+
+.email {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-family);
+}
+
+.profileSection {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.menuItem {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  color: var(--color-sidebar-text);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  transition: background-color 0.2s;
+}
+
+.menuItem:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.menuItemActive {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  color: var(--color-sidebar-text-active);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--color-bg-hover);
+}
+
+.menuSection {
+  flex: 1;
+  margin-bottom: var(--spacing-xl);
+}

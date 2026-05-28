@@ -8,6 +8,7 @@ import Canvas from '../Canvas';
 import PagesInspector from '../PagesInspector';
 import useStore from '../../store';
 import { TransformProvider, useTransformRef } from '../../contexts/TransformContext';
+import styles from './EditorShell.module.css';
 
 function toCanvasCoords(screenX, screenY, canvasRect, transform) {
   return {
@@ -135,48 +136,24 @@ function EditorContent() {
         </div>
       </div>
 
-      {/* Context menu overlay */}
+      {/* Context menu */}
       {contextMenu && (
         <>
-          {/* Transparent backdrop — click/right-click to close */}
           <div
-            style={{ position: 'fixed', inset: 0, zIndex: 9999 }}
+            className={styles.backdrop}
             onClick={() => setContextMenu(null)}
             onContextMenu={(e) => { e.preventDefault(); setContextMenu(null); }}
           />
-          {/* The menu itself */}
           <div
-            style={{
-              position: 'fixed',
-              left: contextMenu.x,
-              top: contextMenu.y,
-              zIndex: 10000,
-              background: '#FFFFFF',
-              border: '1px solid #E0E0E0',
-              borderRadius: 8,
-              boxShadow: '0px 4px 12px rgba(0,0,0,0.15)',
-              padding: '4px 0',
-              minWidth: 160,
-            }}
+            className={styles.menu}
+            style={{ left: contextMenu.x, top: contextMenu.y }}
           >
             <button
+              className={styles.item}
               onClick={() => {
                 removeElement(contextMenu.elementId);
                 setContextMenu(null);
               }}
-              style={{
-                width: '100%',
-                padding: '10px 16px',
-                border: 'none',
-                background: 'transparent',
-                cursor: 'pointer',
-                fontFamily: 'Inter',
-                fontSize: 14,
-                color: '#EF4444',
-                textAlign: 'left',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#FFF5F5'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
             >
               🗑️ Удалить
             </button>

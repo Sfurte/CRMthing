@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useStore from '../../store';
+import styles from './ProjectCard.module.css';
 
 export default function ProjectCard({ projectId, project }) {
   const navigate = useNavigate();
@@ -31,10 +32,10 @@ export default function ProjectCard({ projectId, project }) {
   };
 
   return (
-    <div className="dashboard-card" onClick={handleClick} onContextMenu={handleContextMenu}>
-      <h3 className="dashboard-card-title">📁 {project.name}</h3>
-      <p className="dashboard-card-description">{project.description}</p>
-      <p className="dashboard-card-time">
+    <div className={styles.card} onClick={handleClick} onContextMenu={handleContextMenu}>
+      <h3 className={styles.title}>📁 {project.name}</h3>
+      <p className={styles.description}>{project.description}</p>
+      <p className={styles.time}>
         🕐 Последний визит: {getTimeAgo(project.lastOpened)}
       </p>
     </div>

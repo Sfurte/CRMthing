@@ -1,54 +1,20 @@
-const styles = {
-  header: {
-    height: 60,
-    background: '#FFFFFF',
-    borderBottom: '1px solid #E0E0E0',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 20px',
-  },
-  leftGroup: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  backText: {
-    fontFamily: 'Inter',
-    fontSize: 16,
-    fontWeight: 400,
-    color: '#202020',
-    cursor: 'pointer',
-  },
-  title: {
-    fontFamily: 'Inter',
-    fontSize: 20,
-    fontWeight: 500,
-    color: '#202020',
-  },
-  spacer: {
-    width: 277,
-  },
-};
+import styles from './Header.module.css';
 
 export default function Header({ title = 'Dashboard', onBack }) {
   const headerStyle = {
-    ...styles.header,
     justifyContent: onBack ? 'space-between' : 'center',
   };
 
   return (
-    <div style={headerStyle}>
+    <div className={styles.header} style={headerStyle}>
       {onBack && (
-        <div style={styles.leftGroup}>
+        <div className={styles.leftGroup}>
           <svg
             width="24"
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            style={{ cursor: 'pointer' }}
+            className={styles.backArrow}
             onClick={onBack}
           >
             <path
@@ -56,13 +22,13 @@ export default function Header({ title = 'Dashboard', onBack }) {
               fill="#202020"
             />
           </svg>
-          <span style={styles.backText} onClick={onBack}>
+          <span className={styles.backText} onClick={onBack}>
             Назад
           </span>
         </div>
       )}
-      <span style={styles.title}>{title}</span>
-      {onBack && <div style={styles.spacer} />}
+      <span className={styles.title}>{title}</span>
+      {onBack && <div className={styles.spacer} />}
     </div>
   );
 }

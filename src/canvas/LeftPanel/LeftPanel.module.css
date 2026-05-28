@@ -1,0 +1,72 @@
+.panel {
+  width: var(--panel-left-width);
+  background: var(--color-bg-white);
+  border-right: 1px solid var(--color-border);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-2xl);
+  line-height: 24px;
+  color: var(--color-text);
+}
+
+.sectionLabel {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-lg);
+  line-height: 20px;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.selectedInfo {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-secondary);
+  line-height: 20px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.inputGroup {
+  margin-bottom: var(--spacing-lg);
+}
+
+.label {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-lg);
+  line-height: 20px;
+  color: var(--color-text);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text);
+  box-sizing: border-box;
+}
+
+.empty {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-light);
+}

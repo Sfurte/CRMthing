@@ -1,0 +1,14 @@
+.wrapper {
+  width: 180px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #aaa;
+  border-radius: var(--radius-sm);
+  background: #f9f9f9;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: #666;
+  user-select: none;
+}

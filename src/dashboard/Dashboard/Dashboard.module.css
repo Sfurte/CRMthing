@@ -1,0 +1,151 @@
+/* ===== Dashboard Layout ===== */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  background-color: var(--color-bg-canvas);
+  padding: 30px 40px;
+  overflow-y: auto;
+}
+
+.header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  color: var(--color-text);
+  margin: 0;
+  font-family: var(--font-family);
+}
+
+/* ===== Last Project Section ===== */
+
+.lastSection {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.lastTitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-md);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ===== "Все проекты" title ===== */
+
+.allTitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  margin-bottom: 15px;
+  margin-top: 10px;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ===== Search Section ===== */
+
+.searchSection {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.searchInput {
+  width: 400px;
+  padding: 0 var(--spacing-lg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  font-size: var(--font-size-md);
+  background-color: var(--color-bg-white);
+  height: 48px;
+  font-family: var(--font-family);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0px 0px 0px 3px rgba(59, 130, 246, 0.15);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-light);
+}
+
+.filterBtn {
+  padding: 0 var(--spacing-2xl);
+  background-color: var(--color-bg-white);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  color: #333;
+  height: 48px;
+  font-family: var(--font-family);
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.filterBtn:hover {
+  background-color: var(--color-bg-hover);
+  border-color: var(--color-primary);
+}
+
+.createBtn {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0 var(--spacing-2xl);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  height: 48px;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  margin-left: auto;
+  transition: background 0.15s;
+}
+
+.createBtn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* ===== Projects Grid ===== */
+
+.projectsList {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-xl);
+}
+
+/* ===== Empty State ===== */
+
+.noProjects {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
+}
+
+.noProjectsHint {
+  color: var(--color-text-light);
+  font-size: var(--font-size-base);
+  margin-top: var(--spacing-sm);
+}

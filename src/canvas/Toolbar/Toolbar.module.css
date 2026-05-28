@@ -1,0 +1,44 @@
+.toolbar {
+  height: var(--toolbar-height);
+  background: var(--color-bg-white);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px var(--spacing-xl);
+  gap: var(--spacing-sm);
+}
+
+.divider {
+  width: 0;
+  height: 18px;
+  border-left: 1px solid var(--color-divider);
+}
+
+.btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-sm) 14px;
+  gap: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text);
+  background: transparent;
+}
+
+.btnGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.chevron {
+  width: 20px;
+  height: 20px;
+}

@@ -1,5 +1,5 @@
 /**
- * EditableText – a clickable, inline-editable text label.
+ * EditableText — a clickable, inline-editable text label.
  *
  * Usage as standalone element (auto-registered via registry):
  *   <TextElement />
@@ -9,6 +9,7 @@
  *   <EditableText initialValue="Label" />
  */
 import { useState, useRef, useEffect } from 'react';
+import styles from './Text.module.css';
 
 export const definition = {
   type: 'Text',
@@ -55,20 +56,8 @@ export function EditableText({ initialValue = 'Текст', style }) {
         onChange={(e) => setValue(e.target.value)}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        style={{
-          border: '1px solid #3B82F6',
-          borderRadius: 4,
-          padding: '2px 4px',
-          fontFamily: 'Inter',
-          fontSize: 14,
-          fontWeight: 400,
-          color: '#202020',
-          background: '#fff',
-          outline: 'none',
-          minWidth: 40,
-          boxSizing: 'border-box',
-          ...style,
-        }}
+        className={styles.input}
+        style={style}
       />
     );
   }
@@ -76,19 +65,8 @@ export function EditableText({ initialValue = 'Текст', style }) {
   return (
     <span
       onClick={handleClick}
-      style={{
-        fontFamily: 'Inter',
-        fontSize: 14,
-        fontWeight: 400,
-        color: '#202020',
-        cursor: 'text',
-        userSelect: 'none',
-        padding: '2px 4px',
-        display: 'inline-block',
-        minWidth: 20,
-        minHeight: 20,
-        ...style,
-      }}
+      className={styles.text}
+      style={style}
     >
       {value}
     </span>
@@ -98,10 +76,7 @@ export function EditableText({ initialValue = 'Текст', style }) {
 /** Default export for registry (standalone canvas element) */
 export default function TextElement() {
   return (
-    <div style={{
-      display: 'inline-block',
-      padding: '4px 8px',
-    }}>
+    <div className={styles.wrapper}>
       <EditableText initialValue="Text" />
     </div>
   );

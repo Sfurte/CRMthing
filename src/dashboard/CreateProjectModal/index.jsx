@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../../store';
+import styles from './CreateProjectModal.module.css';
 
 export default function CreateProjectModal({ isOpen, onClose }) {
   const navigate = useNavigate();
@@ -27,38 +28,37 @@ export default function CreateProjectModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="dashboard-modal-overlay" onClick={handleClose}>
-      <div className="dashboard-modal" onClick={(e) => e.stopPropagation()}>
-        <h2 className="dashboard-modal-title">Новый проект</h2>
+    <div className={styles.overlay} onClick={handleClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <h2 className={styles.title}>Новый проект</h2>
 
-        <label className="dashboard-modal-label">Название проекта</label>
+        <label className={styles.label}>Название проекта</label>
         <input
           type="text"
           placeholder="Введите название"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="dashboard-modal-input"
+          className={styles.input}
           autoFocus
         />
 
-        <label className="dashboard-modal-label">Описание проекта</label>
+        <label className={styles.label}>Описание проекта</label>
         <textarea
           placeholder="Краткое описание (необязательно)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="dashboard-modal-textarea"
+          className={styles.textarea}
           rows={3}
         />
 
-        <div className="dashboard-modal-actions">
-          <button className="dashboard-modal-btn-cancel" onClick={handleClose}>
+        <div className={styles.actions}>
+          <button className={styles.btnCancel} onClick={handleClose}>
             Отмена
           </button>
           <button
-            className="dashboard-modal-btn-save"
+            className={styles.btnSave}
             onClick={handleCreate}
             disabled={!name.trim()}
-            style={{ opacity: name.trim() ? 1 : 0.5 }}
           >
             Создать
           </button>

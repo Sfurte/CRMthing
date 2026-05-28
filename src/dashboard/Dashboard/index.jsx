@@ -4,7 +4,7 @@ import Header from '../../shared/Header';
 import ProjectCard from '../ProjectCard';
 import CreateProjectModal from '../CreateProjectModal';
 import DashboardSidebar from '../DashboardSidebar';
-import './Dashboard.css';
+import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
   const lastProjectId = useStore(selectLastOpenedProjectId);
@@ -20,39 +20,39 @@ export default function Dashboard() {
     .sort((a, b) => b[1].lastOpened - a[1].lastOpened);
 
   return (
-    <div className="dashboard">
+    <div className={styles.dashboard}>
       <Header title="Проекты" />
-      <div className="dashboard-body">
+      <div className={styles.body}>
         <DashboardSidebar />
 
-        <div className="dashboard-content">
-          <div className="dashboard-header">
-            <h1 className="dashboard-title">Проекты</h1>
+        <div className={styles.content}>
+          <div className={styles.header}>
+            <h1 className={styles.title}>Проекты</h1>
           </div>
 
           {lastProject && (
-            <div className="dashboard-last-section">
-              <h2 className="dashboard-last-title">Последний проект</h2>
+            <div className={styles.lastSection}>
+              <h2 className={styles.lastTitle}>Последний проект</h2>
               <ProjectCard projectId={lastProjectId} project={lastProject} />
             </div>
           )}
 
-          <p className="dashboard-all-title">
+          <p className={styles.allTitle}>
             Все проекты ({projectEntries.length})
           </p>
 
-          <div className="dashboard-search-section">
-            <div className="dashboard-search-container">
+          <div className={styles.searchSection}>
+            <div className={styles.searchContainer}>
               <input
                 type="text"
-                className="dashboard-search-input"
+                className={styles.searchInput}
                 placeholder="Поиск проектов"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <button className="dashboard-filter-btn">Фильтр</button>
+              <button className={styles.filterBtn}>Фильтр</button>
               <button
-                className="dashboard-create-btn"
+                className={styles.createBtn}
                 onClick={() => setShowModal(true)}
               >
                 + Создать проект
@@ -60,11 +60,11 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="dashboard-projects-list">
+          <div className={styles.projectsList}>
             {projectEntries.length === 0 ? (
-              <div className="dashboard-no-projects">
+              <div className={styles.noProjects}>
                 <p>Проектов пока нет</p>
-                <p className="dashboard-no-projects-hint">
+                <p className={styles.noProjectsHint}>
                   Создайте первый проект
                 </p>
               </div>
