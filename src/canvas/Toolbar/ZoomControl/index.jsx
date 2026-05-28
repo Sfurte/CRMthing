@@ -3,8 +3,8 @@
  * the user to type a custom value.
  */
 import { useState, useRef } from 'react';
-import useStore, { selectViewTransform } from '../store';
-import useClickOutside from '../hooks/useClickOutside';
+import useStore, { selectViewTransform } from '../../../store';
+import useClickOutside from '../../../hooks/useClickOutside';
 
 const btnStyle = {
   display: 'flex',

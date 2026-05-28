@@ -5,7 +5,7 @@
  * Selection (click) is handled by App.jsx via the drag-end delta check.
  */
 import { useDraggable } from '@dnd-kit/core';
-import { ElementRenderers } from '../elements/registry';
+import { ElementRenderers } from '../../elements/registry';
 
 export default function DraggableElement({ element, zoom, onContextMenu }) {
   const { id, type, x, y } = element;

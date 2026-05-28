@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import useStore, { selectLastOpenedProjectId } from '../store';
-import Header from '../components/Header';
-import ProjectCard from './dashboard/ProjectCard';
-import CreateProjectModal from './dashboard/CreateProjectModal';
-import DashboardSidebar from './dashboard/DashboardSidebar';
-import './dashboard/Dashboard.css';
+import useStore, { selectLastOpenedProjectId } from '../../store';
+import Header from '../../shared/Header';
+import ProjectCard from '../ProjectCard';
+import CreateProjectModal from '../CreateProjectModal';
+import DashboardSidebar from '../DashboardSidebar';
+import './Dashboard.css';
 
 export default function Dashboard() {
   const lastProjectId = useStore(selectLastOpenedProjectId);

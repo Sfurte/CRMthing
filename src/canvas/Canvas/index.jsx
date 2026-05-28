@@ -4,12 +4,12 @@
  */
 import { useDroppable } from '@dnd-kit/core';
 import { useEffect } from 'react';
-import useStore, { selectActivePageElements } from '../store';
-import DraggableElement from './DraggableElement';
-import useCanvasTransform from '../hooks/useCanvasTransform';
-import useCombinedRef from '../hooks/useCombinedRef';
-import { ARTBOARD_WIDTH, ARTBOARD_HEIGHT } from '../constants';
-import { useTransformRef } from '../contexts/TransformContext';
+import useStore, { selectActivePageElements } from '../../store';
+import DraggableElement from '../DraggableElement';
+import useCanvasTransform from '../../hooks/useCanvasTransform';
+import useCombinedRef from '../../hooks/useCombinedRef';
+import { ARTBOARD_WIDTH, ARTBOARD_HEIGHT } from '../../app/constants';
+import { useTransformRef } from '../../contexts/TransformContext';
 
 export default function Canvas({ canvasRectRef, onElementContextMenu }) {
   const elements = useStore(selectActivePageElements);

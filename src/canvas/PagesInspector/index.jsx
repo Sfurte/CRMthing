@@ -3,7 +3,7 @@
  * showing all pages of the current project and allowing switching.
  */
 import { useState } from 'react';
-import useStore from '../store';
+import useStore from '../../store';
 
 const PANEL_WIDTH = 240;
 const COLLAPSED_WIDTH = 44;

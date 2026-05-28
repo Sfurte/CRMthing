@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import useStore, { selectActivePageElements } from '../store';
-import { elementDefinitions } from '../elements/registry';
+import useStore, { selectActivePageElements } from '../../store';
+import { elementDefinitions } from '../../elements/registry';
 
 // Build label lookup: type → label
 const labelByType = {};

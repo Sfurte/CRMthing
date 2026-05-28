@@ -3,8 +3,8 @@
  * Click an item to add it at a default position (200, 200).
  */
 import { useState, useRef } from 'react';
-import { elementDefinitions } from '../elements/registry';
-import useStore from '../store';
+import { elementDefinitions } from '../../../elements/registry';
+import useStore from '../../../store';
 import useClickOutside from '../hooks/useClickOutside';
 
 const btnStyle = {

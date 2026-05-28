@@ -1,5 +1,5 @@
 ﻿// Auto-discover all element files in this directory (except registry.js)
-const elementModules = import.meta.glob('./*.jsx', { eager: true });
+const elementModules = import.meta.glob('./*/index.jsx', { eager: true });
 
 const ElementRenderers = {};
 const elementDefinitions = [];

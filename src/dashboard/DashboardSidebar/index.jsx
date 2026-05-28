@@ -1,4 +1,5 @@
 const styles = {
+const styles = {
   sidebar: {
     width: 280,
     minWidth: 280,

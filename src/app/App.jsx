@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import EditorShell from './pages/EditorShell';
+import Dashboard from '../dashboard/Dashboard';
+import EditorShell from '../canvas/EditorShell';
 
 export default function App() {
   return (

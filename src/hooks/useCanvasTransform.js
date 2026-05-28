@@ -5,7 +5,7 @@
  */
 import { useCallback, useRef, useEffect } from 'react';
 import useStore, { selectViewTransform } from '../store';
-import { MIN_ZOOM, MAX_ZOOM } from '../constants';
+import { MIN_ZOOM, MAX_ZOOM } from '../app/constants';
 
 export default function useCanvasTransform() {
   const viewTransform = useStore(selectViewTransform);

@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DndContext } from '@dnd-kit/core';
-import Header from '../components/Header';
-import LeftPanel from '../components/LeftPanel';
-import Toolbar from '../components/Toolbar';
-import Canvas from '../components/Canvas';
-import PagesInspector from '../components/PagesInspector';
-import useStore from '../store';
-import { TransformProvider, useTransformRef } from '../contexts/TransformContext';
+import Header from '../../shared/Header';
+import LeftPanel from '../LeftPanel';
+import Toolbar from '../Toolbar';
+import Canvas from '../Canvas';
+import PagesInspector from '../PagesInspector';
+import useStore from '../../store';
+import { TransformProvider, useTransformRef } from '../../contexts/TransformContext';
 
 function toCanvasCoords(screenX, screenY, canvasRect, transform) {
   return {
