@@ -1,5 +1,6 @@
 import ButtonElement, { definition as buttonDef } from './button';
 import CardElement, { definition as cardDef } from './card';
+import ContainerElement, { definition as containerDef } from './container';
 import InputElement, { definition as inputDef } from './input';
 import TextElement, { definition as textDef } from './text';
 import TableElement, { definition as tableDef } from './table';
@@ -7,7 +8,6 @@ import GridElement, { definition as gridDef } from './grid';
 import ImageElement, { definition as imageDef } from './image';
 import ChartElement, { definition as chartDef } from './chart';
 
-// Вспомогательная функция для добавления размеров
 const withSize = (def, w, h) => ({
   ...def,
   defaultWidth: w,
@@ -17,6 +17,7 @@ const withSize = (def, w, h) => ({
 export const ELEMENTS = {
   Button: ButtonElement,
   Card: CardElement,
+  Container: ContainerElement,
   Input: InputElement,
   Text: TextElement,
   Table: TableElement,
@@ -28,6 +29,7 @@ export const ELEMENTS = {
 export const ELEMENT_DEFINITIONS = [
   withSize(buttonDef, 150, 40),
   withSize(cardDef, 250, 150),
+  withSize(containerDef, 300, 200),
   withSize(inputDef, 200, 80),
   withSize(textDef, 150, 30),
   withSize(tableDef, 400, 250),

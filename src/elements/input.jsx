@@ -27,7 +27,7 @@ export default function InputElement({ element, isSelected }) {
       display: 'flex',
       flexDirection: 'column',
       gap: 4,
-      width: 200,
+      width: '100%',
       pointerEvents: isSelected ? 'none' : 'auto',
     }}>
       {showLabel && (

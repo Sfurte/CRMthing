@@ -21,6 +21,7 @@ const typeToCategory = {
   Input: 'form',
   Grid: 'structure',
   Card: 'structure',
+  Container: 'structure',
   Text: 'design',
   Image: 'design',
 };

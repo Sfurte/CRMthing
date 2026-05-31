@@ -72,174 +72,8 @@ export default function LeftPanel() {
     if (selectedElement) updateElementProps(selectedElement.id, { [propName]: value });
   }, [selectedElement, updateElementProps]);
 
-  const handleColumnCountChange = (value) => {
-    if (!selectedElement || selectedElement.type !== 'Grid') return;
-    
-    const currentColumns = selectedElement.props?.columns || [];
-    const newCount = parseInt(value) || 2;
-    
-    let newColumns = [...currentColumns];
-    if (newCount > currentColumns.length) {
-      for (let i = currentColumns.length; i < newCount; i++) {
-        newColumns.push({
-          id: `col-${Date.now()}-${i}`,
-          span: 12,
-          content: `Колонка ${i + 1}`,
-          xs: 24, sm: 12, md: 8, lg: 6, xl: 4,
-          offset: 0, order: 0, push: 0, pull: 0,
-        });
-      }
-    } else if (newCount < currentColumns.length) {
-      newColumns = newColumns.slice(0, newCount);
-    }
-    
-    updateElementProps(selectedElement.id, { columnCount: newCount, columns: newColumns });
-  };
-
-  const handleColumnUpdate = (index, updatedCol) => {
-    if (!selectedElement) return;
-    const columns = [...(selectedElement.props?.columns || [])];
-    columns[index] = updatedCol;
-    updateElementProps(selectedElement.id, { columns });
-  };
-
-  const handleColumnRemove = (index) => {
-    if (!selectedElement) return;
-    const columns = [...(selectedElement.props?.columns || [])];
-    columns.splice(index, 1);
-    updateElementProps(selectedElement.id, { 
-      columns, 
-      columnCount: columns.length 
-    });
-  };
-
   const renderPropertyEditor = (prop) => {
     const value = propValues[prop.name];
-
-    if (prop.name === 'columnCount' && selectedElement?.type === 'Grid') {
-      return (
-        <div>
-          <input
-            type="number"
-            min="1"
-            max="24"
-            value={value || 2}
-            onChange={(e) => handlePropChange(prop.name, parseInt(e.target.value))}
-            style={styles.input}
-          />
-          <button
-            onClick={() => handleColumnCountChange(value)}
-            style={styles.applyButton}
-          >
-            Применить колонки
-          </button>
-          <div style={styles.infoText}>
-            Измените число и нажмите «Применить» для обновления сетки
-          </div>
-        </div>
-      );
-    }
-
-    if (prop.name === 'columns' && selectedElement?.type === 'Grid') {
-      const columns = propValues.columns || [];
-      return (
-        <div>
-          <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>
-            Настройка колонок:
-          </div>
-          {columns.map((col, index) => (
-            <div key={col.id || index} style={styles.columnEditor}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontWeight: 500, fontSize: 13 }}>Колонка #{index + 1}</span>
-                {columns.length > 1 && (
-                  <button 
-                    onClick={() => handleColumnRemove(index)}
-                    style={{ background: '#ff4d4f', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', cursor: 'pointer', fontSize: 11 }}
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-              
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontSize: 11, color: '#666', display: 'block', marginBottom: 4 }}>Содержимое</label>
-                <input
-                  type="text"
-                  value={col.content || ''}
-                  onChange={(e) => handleColumnUpdate(index, { ...col, content: e.target.value })}
-                  style={{ ...styles.input, padding: '4px 8px', fontSize: 13 }}
-                />
-              </div>
-
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontSize: 11, color: '#666', display: 'block', marginBottom: 4 }}>Базовый span (1-24)</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="24"
-                  value={col.span || 12}
-                  onChange={(e) => handleColumnUpdate(index, { ...col, span: parseInt(e.target.value) || 12 })}
-                  style={{ ...styles.input, padding: '4px 8px', fontSize: 13 }}
-                />
-              </div>
-
-              <div style={{ fontSize: 10, color: '#888', marginBottom: 6, fontWeight: 500 }}>
-                Адаптивные брейкпоинты:
-              </div>
-
-              {[
-                { key: 'xs', label: 'XS <576px' },
-                { key: 'sm', label: 'SM ≥576px' },
-                { key: 'md', label: 'MD ≥768px' },
-                { key: 'lg', label: 'LG ≥992px' },
-                { key: 'xl', label: 'XL ≥1200px' },
-              ].map((bp) => (
-                <div key={bp.key} style={styles.breakpointRow}>
-                  <span style={styles.breakpointLabel}>{bp.label}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="24"
-                    placeholder="—"
-                    value={col[bp.key] ?? ''}
-                    onChange={(e) => {
-                      const val = e.target.value === '' ? undefined : parseInt(e.target.value);
-                      handleColumnUpdate(index, { ...col, [bp.key]: val });
-                    }}
-                    style={styles.breakpointInput}
-                  />
-                </div>
-              ))}
-
-              <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px dashed #e8e8e8' }}>
-                <div style={{ marginBottom: 6 }}>
-                  <label style={{ fontSize: 11, color: '#666', display: 'block', marginBottom: 4 }}>Offset</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="24"
-                    value={col.offset || 0}
-                    onChange={(e) => handleColumnUpdate(index, { ...col, offset: parseInt(e.target.value) || 0 })}
-                    style={{ ...styles.input, padding: '4px 8px', fontSize: 12 }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: 11, color: '#666', display: 'block', marginBottom: 4 }}>Order</label>
-                  <input
-                    type="number"
-                    min="-24"
-                    max="24"
-                    value={col.order || 0}
-                    onChange={(e) => handleColumnUpdate(index, { ...col, order: parseInt(e.target.value) || 0 })}
-                    style={{ ...styles.input, padding: '4px 8px', fontSize: 12 }}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      );
-    }
 
     switch (prop.type) {
       case 'text':
@@ -250,7 +84,11 @@ export default function LeftPanel() {
       case 'select':
         return (
           <select key={prop.name} value={value || ''} onChange={(e) => handlePropChange(prop.name, e.target.value)} style={styles.select}>
-            {prop.options?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+            {prop.options?.map(opt => {
+              const optValue = typeof opt === 'object' ? opt.value : opt;
+              const optLabel = typeof opt === 'object' ? opt.label : opt;
+              return <option key={optValue} value={optValue}>{optLabel}</option>;
+            })}
           </select>
         );
       case 'checkbox':
