@@ -4,6 +4,7 @@ import InputElement, { definition as inputDef } from './input';
 import TextElement, { definition as textDef } from './text';
 import TableElement, { definition as tableDef } from './table';
 import GridElement, { definition as gridDef } from './grid';
+import RadioElement, { definition as radioDef } from './radio';
 
 // Карта компонентов для рендеринга на доске
 export const ELEMENTS = {
@@ -13,6 +14,7 @@ export const ELEMENTS = {
   Text: TextElement,
   Table: TableElement,
   Grid: GridElement,
+  Radio: RadioElement,
 };
 
 // Список определений для меню (сайдбара)
@@ -23,6 +25,7 @@ export const ELEMENT_DEFINITIONS = [
   textDef,
   tableDef,
   gridDef,
+  radioDef,
 ];
 
 // Для совместимости со старым кодом

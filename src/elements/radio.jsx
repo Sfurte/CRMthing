@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Radio } from 'antd';
-import { RadioOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined } from '@ant-design/icons'; // ✅ Исправлено
 import useStore from '../store';
 
 export const definition = {
   type: 'Radio',
   label: 'Переключатель',
-  icon: RadioOutlined,
+  icon: CheckCircleOutlined, // ✅ И здесь тоже исправлено
   defaultProps: {
     options: [
       { label: 'Вариант 1', value: 'option1' },
