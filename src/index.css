@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 @import 'antd/dist/reset.css';
 
 * {
@@ -23,11 +23,6 @@ input:focus {
   box-shadow: 0px 0px 0px 3px rgba(59, 130, 246, 0.15);
 }
 
-/* =========================================
-   Ant Design overrides & canvas styles
-   ========================================= */
-
-/* Canvas elements */
 .canvas-element {
   position: absolute;
   cursor: move;
@@ -46,7 +41,6 @@ input:focus {
   z-index: 10;
 }
 
-/* Drag overlay */
 .drag-overlay {
   opacity: 0.6;
   background: #f0f5ff;
@@ -55,7 +49,6 @@ input:focus {
   pointer-events: none;
 }
 
-/* Sidebar / palette items */
 .palette-item {
   display: flex;
   align-items: center;
@@ -75,7 +68,6 @@ input:focus {
   cursor: grabbing;
 }
 
-/* Ant Design components on canvas */
 .canvas-element .ant-btn,
 .canvas-element .ant-input,
 .canvas-element .ant-card,
@@ -83,28 +75,28 @@ input:focus {
   pointer-events: auto;
 }
 
-/* Disable interactions when element is selected (for dragging) */
 .canvas-element.selected .ant-input input,
 .canvas-element.selected .ant-input-affix-wrapper,
 .canvas-element.selected .ant-btn,
-.canvas-element.selected .ant-card,
-.canvas-element.selected .ant-table {
+.canvas-element.selected .ant-card {
   pointer-events: none;
 }
 
-/* Allow editing when explicitly in edit mode */
 .canvas-element.edit-mode .ant-input input {
   pointer-events: auto;
 }
 
-/* Typography */
 .canvas-element .ant-typography {
   margin: 0;
 }
 
-/* Table adjustments */
 .canvas-element .ant-table {
   background: transparent;
+}
+
+.canvas-element .ant-table-cell {
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .canvas-element .ant-table-thead > tr > th {
@@ -118,7 +110,6 @@ input:focus {
   padding: 6px 12px;
 }
 
-/* Card adjustments */
 .canvas-element .ant-card {
   margin: 0;
 }
@@ -138,7 +129,6 @@ input:focus {
   font-size: 13px;
 }
 
-/* Input label */
 .canvas-element .input-label {
   font-size: 12px;
   font-weight: 500;
@@ -147,7 +137,6 @@ input:focus {
   user-select: none;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -167,7 +156,6 @@ input:focus {
   background: #a1a1a1;
 }
 
-/* Utility */
 .hidden {
   display: none !important;
 }
@@ -177,9 +165,7 @@ input:focus {
   align-items: center;
   justify-content: center;
 }
-/* ... существующие стили ... */
 
-/* Стили для Ant Design Charts */
 .ant-charts-container {
   background: #fff;
 }
@@ -188,12 +174,10 @@ input:focus {
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Адаптивность для графиков */
 .canvas-element .ant-chart {
   overflow: visible;
 }
 
-/* Анимация при выделении */
 .canvas-element.selected .ant-charts-container {
   outline: 2px solid #1890ff;
   outline-offset: 2px;

@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { Table } from 'antd';
 import useStore from '../store';
 
-// 🔹 Определение элемента с новыми свойствами
 export const definition = {
   type: 'Table',
   label: 'Таблица',
@@ -24,7 +23,6 @@ export const definition = {
   ],
 };
 
-// 🔹 Компонент редактируемого заголовка
 const EditableHeader = ({ value, onSave, style }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
@@ -82,7 +80,6 @@ const EditableHeader = ({ value, onSave, style }) => {
   );
 };
 
-// 🔹 Компонент редактируемой ячейки
 const EditableCell = ({ value, onSave, style }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
@@ -143,33 +140,27 @@ const EditableCell = ({ value, onSave, style }) => {
 export default function TableElement({ element, isSelected }) {
   const updateElementProps = useStore((s) => s.updateElementProps);
   
-  // Безопасное получение пропсов с дефолтами
   const props = element?.props || definition.defaultProps;
 
-  // Вычисляем размеры (защита от некорректных значений)
   const rowCount = Math.min(20, Math.max(1, Number(props.rowCount) || 3));
   const columnCount = Math.min(10, Math.max(1, Number(props.columnCount) || 3));
   
-  // Генерируем заголовки (если их нет или меньше чем столбцов — дополняем)
   const headers = Array.from({ length: columnCount }, (_, i) => 
     (props.headers?.[i] ?? `Колонка ${i + 1}`)
   );
   
-  // Генерируем данные (если их нет или меньше — дополняем пустыми)
   const data = Array.from({ length: rowCount }, (_, r) =>
     Array.from({ length: columnCount }, (_, c) =>
       props.data?.[r]?.[c] ?? `Ячейка ${r + 1}.${c + 1}`
     )
   );
 
-  // Сохранение заголовка
   const handleHeaderSave = (colIndex, newValue) => {
     const newHeaders = [...headers];
     newHeaders[colIndex] = newValue;
     updateElementProps(element.id, { headers: newHeaders });
   };
 
-  // Сохранение ячейки
   const handleCellSave = (rowIndex, colIndex, newValue) => {
     const newData = data.map((row, r) =>
       r === rowIndex ? row.map((cell, c) => (c === colIndex ? newValue : cell)) : row
@@ -177,7 +168,6 @@ export default function TableElement({ element, isSelected }) {
     updateElementProps(element.id, { data: newData });
   };
 
-  // Формирование колонок для Ant Design Table
   const columns = headers.map((title, colIndex) => ({
     title: (
       <EditableHeader 
@@ -196,25 +186,19 @@ export default function TableElement({ element, isSelected }) {
     ),
   }));
 
-  // Преобразование 2D массива в объект для AntD Table
   const dataSource = data.map((row, rowIndex) => ({
     key: `row_${rowIndex}`,
     ...row.reduce((acc, cell, colIndex) => ({ ...acc, [`col_${colIndex}`]: cell }), {}),
   }));
 
   return (
-    <div style={{ width: '100%', height: '100%', padding: 4, pointerEvents: 'auto' }}>
+    <div style={{ width: '100%', height: '100%', padding: 4, userSelect: 'none' }}>
       <Table
         columns={columns}
         dataSource={dataSource}
         size="small"
         pagination={false}
         bordered
-        style={{ pointerEvents: 'auto' }}
-        onRow={() => ({
-          onPointerDown: (e) => e.stopPropagation(),
-          onClick: (e) => e.stopPropagation(),
-        })}
       />
     </div>
   );

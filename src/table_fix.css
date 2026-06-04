@@ -1,0 +1,12 @@
+.canvas-element .ant-table {
+  background: transparent;
+}
+
+.canvas-element .ant-table-cell {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.canvas-element.selected .ant-table {
+  pointer-events: none;
+}
