@@ -1,21 +1,11 @@
 import { useMemo } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Menu, Typography } from 'antd';
-import {
-  FolderOutlined,
-  SettingOutlined,
-  QuestionCircleOutlined,
-} from '@ant-design/icons';
+import { FolderOutlined, SettingOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useTranslation } from '../i18n';
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
-
-const pageTitles = {
-  '/': 'projects',
-  '/settings': 'settings',
-  '/help': 'help',
-};
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -34,9 +24,6 @@ export default function AppLayout() {
     const path = key === 'projects' ? '/' : `/${key}`;
     navigate(path);
   };
-
-  const titleKey = pageTitles[location.pathname] || 'projects';
-  const pageTitle = t(titleKey);
 
   return (
     <Layout style={{ height: '100vh' }}>
@@ -83,24 +70,6 @@ export default function AppLayout() {
       </Sider>
 
       <Layout>
-        {/* Shared header */}
-        <div
-          style={{
-            height: 60,
-            background: '#fff',
-            borderBottom: '1px solid #E0E0E0',
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0 24px',
-            flexShrink: 0,
-          }}
-        >
-          <Text strong style={{ fontSize: 20, color: '#202020' }}>
-            {pageTitle}
-          </Text>
-        </div>
-
-        {/* Page content */}
         <Content style={{ background: '#F0F7FF', overflow: 'auto' }}>
           <Outlet />
         </Content>
