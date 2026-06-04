@@ -299,7 +299,7 @@ const useStore = create(
                     ...page,
                     elements: page.elements.map((el) => {
                       if (el.id === id) return { ...el, zIndex: above.zIndex };
-                      if (el.id === above.id) return { ...above, zIndex: el.zIndex };
+                      if (el.id === above.id) return { ...above, zIndex: sorted[idx].zIndex };
                       return el;
                     }),
                   },
@@ -328,7 +328,7 @@ const useStore = create(
                     ...page,
                     elements: page.elements.map((el) => {
                       if (el.id === id) return { ...el, zIndex: below.zIndex };
-                      if (el.id === below.id) return { ...below, zIndex: el.zIndex };
+                      if (el.id === below.id) return { ...below, zIndex: sorted[idx].zIndex };
                       return el;
                     }),
                   },
