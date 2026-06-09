@@ -7,9 +7,9 @@ export const definition = {
   label: 'Изображение',
   icon: PictureOutlined,
   defaultProps: {
-    src: '', // Пусто по умолчанию
+    src: '',
     alt: 'Изображение',
-    objectFit: 'cover', // 'cover' | 'contain' | 'fill'
+    objectFit: 'cover',
     borderRadius: 0,
   },
   properties: [
@@ -22,30 +22,23 @@ export const definition = {
 export default function ImageElement({ element, isSelected }) {
   const updateElementProps = useStore((s) => s.updateElementProps);
   const fileInputRef = useRef(null);
-  
+  const pointerStart = useRef(null);
+
   const props = element?.props || definition.defaultProps;
   const { src, alt, objectFit, borderRadius } = props;
-  
   const [previewUrl, setPreviewUrl] = useState(src || '');
 
-  // Обработка загрузки файла
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    // Проверяем тип файла
     if (!file.type.startsWith('image/')) {
       alert('Пожалуйста, выберите изображение (PNG, JPG, GIF, SVG)');
       return;
     }
-
-    // Проверяем размер (макс 5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert('Файл слишком большой. Максимальный размер: 5MB');
       return;
     }
-
-    // Читаем файл как base64
     const reader = new FileReader();
     reader.onload = (event) => {
       const base64 = event.target?.result;
@@ -54,25 +47,37 @@ export default function ImageElement({ element, isSelected }) {
         updateElementProps(element.id, { src: base64 });
       }
     };
-    reader.onerror = () => {
-      alert('Ошибка при чтении файла');
-    };
     reader.readAsDataURL(file);
   };
 
-  // Клик по кнопке загрузки
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  // Удалить изображение
   const handleRemove = () => {
     setPreviewUrl('');
     updateElementProps(element.id, { src: '' });
   };
 
+  const handlePointerDown = (e) => {
+    pointerStart.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerUp = (e) => {
+    if (!pointerStart.current) return;
+    if (e.button !== 0) return; // left button only
+    const dx = Math.abs(e.clientX - pointerStart.current.x);
+    const dy = Math.abs(e.clientY - pointerStart.current.y);
+    pointerStart.current = null;
+    if (dx < 5 && dy < 5) {
+      handleUploadClick();
+    }
+  };
+
   return (
     <div
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
       style={{
         width: '100%',
         height: '100%',
@@ -85,9 +90,7 @@ export default function ImageElement({ element, isSelected }) {
         borderRadius: Number(borderRadius) || 0,
         overflow: 'hidden',
       }}
-      onClick={(e) => e.stopPropagation()}
     >
-      {/* Скрытый input для загрузки файлов */}
       <input
         ref={fileInputRef}
         type="file"
@@ -98,7 +101,6 @@ export default function ImageElement({ element, isSelected }) {
 
       {previewUrl ? (
         <>
-          {/* Отображение изображения */}
           <img
             src={previewUrl}
             alt={alt}
@@ -110,7 +112,6 @@ export default function ImageElement({ element, isSelected }) {
             }}
           />
           
-          {/* Кнопки управления (показываются при выделении) */}
           {isSelected && (
             <div
               style={{
@@ -122,6 +123,7 @@ export default function ImageElement({ element, isSelected }) {
               }}
             >
               <button
+                onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleUploadClick();
@@ -138,11 +140,11 @@ export default function ImageElement({ element, isSelected }) {
                   gap: 4,
                   boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 }}
-                title="Заменить изображение"
               >
                 <UploadOutlined /> Заменить
               </button>
               <button
+                onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleRemove();
@@ -157,7 +159,6 @@ export default function ImageElement({ element, isSelected }) {
                   fontSize: 12,
                   boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 }}
-                title="Удалить изображение"
               >
                 Удалить
               </button>
@@ -165,14 +166,7 @@ export default function ImageElement({ element, isSelected }) {
           )}
         </>
       ) : (
-        /* Плейсхолдер (когда изображение не загружено) */
         <div
-          onClick={(e) => {
-            e.stopPropagation();
-            if (isSelected) {
-              handleUploadClick();
-            }
-          }}
           style={{
             width: '100%',
             height: '100%',

@@ -29,6 +29,8 @@ function EditorContent() {
 
   const transformRef = useTransformRef();
   const canvasRectRef = useRef(null);
+  const clipboardRef = useRef(null);
+  const mousePosRef = useRef({ x: 0, y: 0 });
 
   const [contextTargetId, setContextTargetId] = useState(null);
 
@@ -51,16 +53,50 @@ function EditorContent() {
     return () => window.removeEventListener('mousedown', handler);
   }, []);
 
+  // Track mouse position for paste at cursor
+  useEffect(() => {
+    const onMove = (e) => { mousePosRef.current = { x: e.clientX, y: e.clientY }; };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') {
         selectElement(null);
         setContextTargetId(null);
       }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+        const state = useStore.getState();
+        const page = state.projects[state.activeProjectId]?.pages[state.activePageId];
+        const el = page?.elements.find((el) => el.id === state.selectedId);
+        if (el) {
+          clipboardRef.current = {
+            type: el.type,
+            width: el.width,
+            height: el.height,
+            props: el.props ? { ...el.props } : {},
+          };
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+        if (!clipboardRef.current) return;
+        e.preventDefault();
+        const data = clipboardRef.current;
+        const canvasRect = canvasRectRef.current;
+        const transform = transformRef.current;
+        let x = 100, y = 100;
+        if (canvasRect && transform) {
+          const coords = toCanvasCoords(mousePosRef.current.x, mousePosRef.current.y, canvasRect, transform);
+          x = coords.x;
+          y = coords.y;
+        }
+        addElement(data.type, x, y);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [selectElement]);
+  }, [selectElement, addElement]);
 
   if (!projects[projectId]) {
     return null;
