@@ -3,6 +3,7 @@ import { BarChartOutlined, CloseOutlined, PlusOutlined, DeleteOutlined, CheckOut
 import { Button, Space } from 'antd';
 import { Column, Line, Pie, Area, Bar } from '@ant-design/charts';
 import useStore from '../store';
+import { textBlock, textStyles } from './blocks/textStyle';
 import './chart.css';
 
 export const definition = {
@@ -18,15 +19,16 @@ export const definition = {
       { category: 'Фев', value: 180 },
       { category: 'Мар', value: 150 },
     ],
+    ...textBlock.defaultProps,
   },
   properties: [
     { name: 'chartType', label: 'Тип', type: 'select', options: ['column', 'line', 'area', 'pie', 'bar'] },
     { name: 'color', label: 'Цвет', type: 'color' },
+    ...textBlock.properties,
   ],
 };
 
-// 🔹 Редактируемый заголовок
-function EditableTitle({ value, onSave }) {
+function EditableTitle({ value, onSave, style: tsStyle }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
   const inputRef = useRef(null);
@@ -41,9 +43,7 @@ function EditableTitle({ value, onSave }) {
   }, [isEditing]);
 
   const handleSave = () => {
-    if (editValue.trim()) {
-      onSave(editValue.trim());
-    }
+    if (editValue.trim()) onSave(editValue.trim());
     setIsEditing(false);
   };
 
@@ -55,10 +55,8 @@ function EditableTitle({ value, onSave }) {
           e.nativeEvent?.stopImmediatePropagation?.();
           setIsEditing(true);
         }}
-        style={{
-          fontSize: 16, fontWeight: 500, textAlign: 'center', cursor: 'text',
-          padding: '8px 4px', marginBottom: 4, color: '#333', userSelect: 'none'
-        }}
+        className="element-chart__title"
+        style={tsStyle}
       >
         {value}
       </div>
@@ -66,7 +64,7 @@ function EditableTitle({ value, onSave }) {
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '4px' }}>
+    <div className="element-chart__title-actions">
       <input
         ref={inputRef}
         type="text"
@@ -80,11 +78,8 @@ function EditableTitle({ value, onSave }) {
         }}
         onPointerDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); }}
         onClick={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); }}
-        style={{
-          width: '70%', fontSize: 16, fontWeight: 500, textAlign: 'center',
-          border: '1px solid #1890ff', outline: 'none', padding: '4px 8px',
-          background: '#fff', color: '#000', borderRadius: 4
-        }}
+        className="element-chart__title-input"
+        style={{ ...tsStyle, textAlign: 'center' }}
       />
       <Button size="small" type="primary" icon={<CheckOutlined />} onClick={(e) => {
         e.stopPropagation();
@@ -101,9 +96,7 @@ function EditableTitle({ value, onSave }) {
   );
 }
 
-// 🔹 Оверлей редактора данных (КОНТРОЛИРУЕМЫЕ ИНПУТЫ)
 function DataEditorOverlay({ data, onSave, onClose }) {
-  // Локальный стейт для данных редактора
   const [localData, setLocalData] = useState(() => {
     return data.map(item => ({ ...item }));
   });
@@ -124,48 +117,36 @@ function DataEditorOverlay({ data, onSave, onClose }) {
   };
 
   const handleSave = () => {
-    // Очищаем пустые строки
     const cleaned = localData.filter(d => d.category?.trim() || d.value);
     onSave(cleaned);
     onClose();
   };
 
-  // Жёсткая блокировка событий
   const stopAll = (e) => {
     e.stopPropagation();
     e.nativeEvent?.stopImmediatePropagation?.();
   };
 
   return (
-    <div
-      style={{
-        position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.98)',
-        borderRadius: 8, padding: 16, zIndex: 100, display: 'flex', flexDirection: 'column',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.15)', pointerEvents: 'auto',
-      }}
-      onPointerDown={stopAll}
-      onClick={stopAll}
-      onKeyDown={stopAll}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, paddingBottom: 12, borderBottom: '1px solid #f0f0f0' }}>
-        <span style={{ fontWeight: 600, fontSize: 14, color: '#202020' }}>📊 Данные графика</span>
+    <div className="element-chart__editor" onPointerDown={stopAll} onClick={stopAll} onKeyDown={stopAll}>
+      <div className="element-chart__editor-header">
+        <span className="element-chart__editor-title">📊 Данные графика</span>
         <Space>
           <Button size="small" onClick={(e) => { stopAll(e); addRow(); }} type="primary" ghost icon={<PlusOutlined />}>Добавить</Button>
           <Button size="small" onClick={(e) => { stopAll(e); onClose(); }}>Отмена</Button>
           <Button size="small" type="primary" icon={<CheckOutlined />} onClick={(e) => { stopAll(e); handleSave(); }}>Сохранить</Button>
         </Space>
       </div>
-
-      <div style={{ flex: 1, overflowY: 'auto', paddingRight: 4 }}>
+      <div className="element-chart__editor-body">
         {localData.map((item, index) => (
-          <div key={index} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+          <div key={index} className="element-chart__editor-row">
             <input
               type="text"
               value={item.category}
               onChange={(e) => handleChange(index, 'category', e.target.value)}
               onPointerDown={stopAll}
               onClick={stopAll}
-              style={{ flex: 1, border: '1px solid #d9d9d9', borderRadius: 4, padding: '6px 10px', fontSize: 13, outline: 'none', color: '#000' }}
+              className="element-chart__editor-input"
               placeholder="Категория"
             />
             <input
@@ -174,7 +155,7 @@ function DataEditorOverlay({ data, onSave, onClose }) {
               onChange={(e) => handleChange(index, 'value', Number(e.target.value))}
               onPointerDown={stopAll}
               onClick={stopAll}
-              style={{ width: 90, border: '1px solid #d9d9d9', borderRadius: 4, padding: '6px 10px', fontSize: 13, outline: 'none', color: '#000', textAlign: 'right' }}
+              className="element-chart__editor-input element-chart__editor-input--narrow"
               placeholder="0"
             />
             <Button size="small" danger icon={<DeleteOutlined />} onClick={(e) => { stopAll(e); removeRow(index); }} ghost />
@@ -187,13 +168,15 @@ function DataEditorOverlay({ data, onSave, onClose }) {
 
 export default function ChartElement({ element, isSelected }) {
   const updateElementProps = useStore((s) => s.updateElementProps);
-  
+  const props = element?.props || definition.defaultProps;
+  const ts = textStyles(props);
+
   const {
     chartType = 'column',
     title = 'Статистика',
     color = '#1677ff',
     data = [],
-  } = element.props || {};
+  } = props;
 
   const [isEditingData, setIsEditingData] = useState(false);
 
@@ -216,11 +199,7 @@ export default function ChartElement({ element, isSelected }) {
     : { data, xField: 'category', yField: 'value', color };
 
   return (
-    <div 
-      style={{ 
-        width: '100%', height: '100%', display: 'flex', flexDirection: 'column', 
-        position: 'relative', pointerEvents: 'auto', background: '#fff', borderRadius: 8, overflow: 'hidden'
-      }}
+    <div className="element-chart"
       onDoubleClick={(e) => {
         if (!e.target.closest('[data-title-edit]') && !isEditingData) {
           e.stopPropagation();
@@ -230,11 +209,11 @@ export default function ChartElement({ element, isSelected }) {
       }}
     >
       <div data-title-edit style={{ flexShrink: 0, zIndex: 10, background: '#fff' }}>
-        <EditableTitle value={title} onSave={handleTitleSave} />
+        <EditableTitle value={title} onSave={handleTitleSave} style={ts} />
       </div>
       
       <div style={{ flex: 1, minHeight: 0, width: '100%', position: 'relative' }}>
-        <ChartComponent {...config} autoFit style={{ pointerEvents: 'auto' }} />
+        <ChartComponent {...config} autoFit />
       </div>
 
       {isEditingData && (

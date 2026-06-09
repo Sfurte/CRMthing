@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Radio } from 'antd';
-import { CheckCircleOutlined } from '@ant-design/icons'; // ✅ Исправлено
+import { CheckCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import useStore from '../store';
+import { textBlock, textStyles } from './blocks/textStyle';
 import './radio.css';
 
 export const definition = {
   type: 'Radio',
   label: 'Переключатель',
-  icon: CheckCircleOutlined, // ✅ И здесь тоже исправлено
+  icon: CheckCircleOutlined,
   defaultProps: {
     options: [
       { label: 'Вариант 1', value: 'option1' },
@@ -15,19 +16,18 @@ export const definition = {
       { label: 'Вариант 3', value: 'option3' },
     ],
     defaultValue: 'option1',
-    direction: 'horizontal', // 'horizontal' | 'vertical'
-    textColor: '#000000',
+    direction: 'horizontal',
     bgColor: 'transparent',
+    ...textBlock.defaultProps,
   },
   properties: [
     { name: 'direction', label: 'Расположение', type: 'select', options: ['horizontal', 'vertical'] },
-    { name: 'textColor', label: 'Цвет текста', type: 'color' },
     { name: 'bgColor', label: 'Фон', type: 'color' },
+    ...textBlock.properties,
   ],
 };
 
-// 🔹 Компонент редактируемой метки опции
-const EditableLabel = ({ value, onSave, style, textColor }) => {
+const EditableLabel = ({ value, onSave, style: tsStyle }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
   const inputRef = useRef(null);
@@ -69,19 +69,8 @@ const EditableLabel = ({ value, onSave, style, textColor }) => {
         }}
         onPointerDown={stopEvents}
         onClick={stopEvents}
-        style={{
-          width: '100%',
-          border: `1px solid ${textColor || '#1890ff'}`,
-          background: '#fff',
-          padding: '2px 6px',
-          fontSize: 13,
-          outline: 'none',
-          borderRadius: 3,
-          boxSizing: 'border-box',
-          color: '#000',
-          cursor: 'text',
-          ...style
-        }}
+        className="element-radio__label-input"
+        style={tsStyle}
       />
     );
   }
@@ -89,7 +78,8 @@ const EditableLabel = ({ value, onSave, style, textColor }) => {
   return (
     <span
       onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
-      style={{ cursor: 'text', padding: '2px 4px', color: textColor || '#000', ...style }}
+      className="element-radio__label"
+      style={tsStyle}
     >
       {value}
     </span>
@@ -99,18 +89,17 @@ const EditableLabel = ({ value, onSave, style, textColor }) => {
 export default function RadioElement({ element, isSelected }) {
   const updateElementProps = useStore((s) => s.updateElementProps);
   const props = element?.props || definition.defaultProps;
+  const ts = textStyles(props);
 
   const {
     options = definition.defaultProps.options,
     defaultValue = 'option1',
     direction = 'horizontal',
-    textColor = '#000000',
     bgColor = 'transparent',
   } = props;
 
   const [selectedValue, setSelectedValue] = useState(defaultValue);
 
-  // Обновляем selectedValue при изменении defaultValue извне
   useEffect(() => {
     setSelectedValue(defaultValue);
   }, [defaultValue]);
@@ -121,7 +110,6 @@ export default function RadioElement({ element, isSelected }) {
     updateElementProps(element.id, { defaultValue: newValue });
   };
 
-  // Добавление новой опции
   const addOption = () => {
     const newOptions = [...options, { 
       label: `Вариант ${options.length + 1}`, 
@@ -130,14 +118,12 @@ export default function RadioElement({ element, isSelected }) {
     updateElementProps(element.id, { options: newOptions });
   };
 
-  // Удаление опции
   const removeOption = (index) => {
     if (options.length <= 1) return;
     const newOptions = options.filter((_, i) => i !== index);
     updateElementProps(element.id, { options: newOptions });
   };
 
-  // Редактирование метки опции
   const handleLabelSave = (index, newLabel) => {
     const newOptions = [...options];
     newOptions[index] = { ...newOptions[index], label: newLabel };
@@ -145,72 +131,29 @@ export default function RadioElement({ element, isSelected }) {
   };
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        padding: 8,
-        boxSizing: 'border-box',
-        backgroundColor: bgColor || 'transparent',
-        borderRadius: 4,
-        pointerEvents: 'auto',
-      }}
+    <div className="element-radio" style={{ backgroundColor: bgColor || 'transparent', pointerEvents: 'auto' }}
       onClick={(e) => e.stopPropagation()}
     >
       <Radio.Group
         onChange={handleChange}
         value={selectedValue}
         direction={direction}
-        style={{ 
-          display: 'flex', 
-          flexDirection: direction === 'vertical' ? 'column' : 'row',
-          gap: direction === 'vertical' ? 12 : 16,
-          alignItems: 'flex-start'
-        }}
+        className={'element-radio__group element-radio__group--' + direction}
       >
         {options.map((option, index) => (
-          <div 
-            key={option.value} 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 6,
-              position: 'relative'
-            }}
-          >
+          <div key={option.value} className="element-radio__item">
             <Radio value={option.value} />
             <EditableLabel
               value={option.label}
               onSave={(val) => handleLabelSave(index, val)}
-              textColor={textColor}
-              style={{ fontSize: 14 }}
+              style={ts}
             />
-            
-            {/* Кнопка удаления опции (показывается при выделении элемента) */}
             {isSelected && options.length > 1 && (
               <button
+                className="element-radio__remove-btn"
                 onClick={(e) => {
                   e.stopPropagation();
                   removeOption(index);
-                }}
-                style={{
-                  position: 'absolute',
-                  right: -18,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  width: 16,
-                  height: 16,
-                  borderRadius: '50%',
-                  border: '1px solid #ff4d4f',
-                  background: '#fff',
-                  color: '#ff4d4f',
-                  fontSize: 12,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: 0,
-                  lineHeight: 1
                 }}
                 title="Удалить вариант"
               >
@@ -221,7 +164,6 @@ export default function RadioElement({ element, isSelected }) {
         ))}
       </Radio.Group>
 
-      {/* Кнопка добавления опции (показывается при выделении) */}
       {isSelected && (
         <button
           onClick={(e) => {
@@ -229,24 +171,12 @@ export default function RadioElement({ element, isSelected }) {
             addOption();
           }}
           style={{
-            marginTop: 12,
-            padding: '4px 12px',
-            background: '#fff',
-            border: '1px dashed #1890ff',
-            borderRadius: 4,
-            color: '#1890ff',
-            fontSize: 12,
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#e6f7ff';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#fff';
+            marginTop: 8, padding: '4px 12px', border: '1px dashed var(--accent)',
+            borderRadius: 4, background: 'transparent', color: 'var(--accent)',
+            cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4,
           }}
         >
-          + Добавить вариант
+          <PlusOutlined /> Добавить вариант
         </button>
       )}
     </div>

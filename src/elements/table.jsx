@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Table } from 'antd';
 import useStore from '../store';
+import { textBlock, textStyles } from './blocks/textStyle';
 import './table.css';
 
 export const definition = {
@@ -15,12 +16,14 @@ export const definition = {
       ['Ячейка 2.1', 'Ячейка 2.2', 'Ячейка 2.3'],
       ['Ячейка 3.1', 'Ячейка 3.2', 'Ячейка 3.3'],
     ],
+    ...textBlock.defaultProps,
   },
   defaultWidth: 500,
   defaultHeight: 250,
   properties: [
     { name: 'rowCount', label: 'Количество строк', type: 'number', min: 1, max: 20 },
     { name: 'columnCount', label: 'Количество столбцов', type: 'number', min: 1, max: 10 },
+    ...textBlock.properties,
   ],
 };
 
@@ -142,6 +145,7 @@ export default function TableElement({ element, isSelected }) {
   const updateElementProps = useStore((s) => s.updateElementProps);
   
   const props = element?.props || definition.defaultProps;
+  const ts = textStyles(props);
 
   const rowCount = Math.min(20, Math.max(1, Number(props.rowCount) || 3));
   const columnCount = Math.min(10, Math.max(1, Number(props.columnCount) || 3));
@@ -174,6 +178,7 @@ export default function TableElement({ element, isSelected }) {
       <EditableHeader 
         value={title} 
         onSave={(val) => handleHeaderSave(colIndex, val)} 
+        style={ts}
       />
     ),
     dataIndex: `col_${colIndex}`,
@@ -183,6 +188,7 @@ export default function TableElement({ element, isSelected }) {
       <EditableCell 
         value={text} 
         onSave={(val) => handleCellSave(rowIndex, colIndex, val)} 
+        style={ts}
       />
     ),
   }));
