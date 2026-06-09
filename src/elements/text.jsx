@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { FontSizeOutlined } from '@ant-design/icons';
 import useStore from '../store';
+import { textBlock, textStyles } from './blocks/textStyle';
 
 export const definition = {
   type: 'Text',
@@ -8,27 +9,24 @@ export const definition = {
   icon: FontSizeOutlined,
   defaultProps: {
     content: 'Введите текст',
-    fontSize: 16,
-    textColor: '#000000',
+    textAlign: 'left',
     bgColor: 'transparent',
-    fontWeight: 400,
-    textAlign: 'left', // 🆕 Выравнивание по умолчанию
+    ...textBlock.defaultProps,
   },
   properties: [
     { name: 'content', label: 'Текст', type: 'textarea' },
-    { name: 'fontSize', label: 'Размер шрифта', type: 'number', min: 8, max: 100 },
-    { name: 'fontWeight', label: 'Жирность', type: 'select', options: [300, 400, 500, 700] },
-    { name: 'textAlign', label: 'Выравнивание', type: 'select', options: ['left', 'center', 'right', 'justify'] }, // 🆕
-    { name: 'textColor', label: 'Цвет текста', type: 'color' },
+    { name: 'textAlign', label: 'Выравнивание', type: 'select', options: ['left', 'center', 'right', 'justify'] },
     { name: 'bgColor', label: 'Фон', type: 'color' },
+    ...textBlock.properties,
   ],
 };
 
-export default function TextElement({ element, isSelected }) {
+export default function TextElement({ element }) {
   const updateElementProps = useStore((s) => s.updateElementProps);
   const props = element?.props || definition.defaultProps;
 
-  const { content, fontSize, textColor, bgColor, fontWeight, textAlign } = props;
+  const { content, textAlign, bgColor } = props;
+  const ts = textStyles(props);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(content);
@@ -38,8 +36,11 @@ export default function TextElement({ element, isSelected }) {
 
   useEffect(() => {
     if (isEditing && textareaRef.current) {
-      textareaRef.current.focus();
-      textareaRef.current.select();
+      const timer = setTimeout(() => {
+        textareaRef.current?.focus();
+        textareaRef.current?.select();
+      }, 10);
+      return () => clearTimeout(timer);
     }
   }, [isEditing]);
 
@@ -53,12 +54,9 @@ export default function TextElement({ element, isSelected }) {
     e.nativeEvent?.stopImmediatePropagation?.();
   };
 
-  // Базовые стили текста (применяются и к просмотру, и к редактированию)
   const textStyle = {
-    color: textColor || '#000',
-    fontSize: Number(fontSize) || 16,
-    fontWeight: Number(fontWeight) || 400,
-    textAlign: textAlign || 'left', // 🆕 Применяем выравнивание
+    ...ts,
+    textAlign: textAlign || 'left',
     lineHeight: 1.4,
     width: '100%',
     whiteSpace: 'pre-wrap',
@@ -77,7 +75,6 @@ export default function TextElement({ element, isSelected }) {
         overflow: 'hidden',
       }}
       onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
-      onClick={(e) => e.stopPropagation()}
     >
       {isEditing ? (
         <textarea
@@ -95,7 +92,7 @@ export default function TextElement({ element, isSelected }) {
           style={{
             ...textStyle,
             background: 'transparent',
-            border: '1px dashed rgba(0,0,0,0.2)', // Пунктирная рамка в режиме редактирования
+            border: '1px dashed rgba(0,0,0,0.2)',
             outline: 'none',
             resize: 'none',
             cursor: 'text',

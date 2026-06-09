@@ -1,7 +1,8 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from 'antd';
 import { InteractionOutlined } from '@ant-design/icons';
 import useStore from '../store';
+import { textBlock, textStyles } from './blocks/textStyle';
 
 export const definition = {
   type: 'Button',
@@ -10,16 +11,19 @@ export const definition = {
   defaultProps: {
     text: 'Нажми меня',
     type: 'primary',
-    size: 'large',
+    ...textBlock.defaultProps,
   },
   properties: [
     { name: 'text', label: 'Текст', type: 'text' },
     { name: 'type', label: 'Тип', type: 'select', options: ['primary', 'default', 'dashed', 'text', 'link'] },
+    ...textBlock.properties,
   ],
 };
 
-export default function ButtonElement({ element, isSelected }) {
+export default function ButtonElement({ element }) {
   const { text = 'Нажми меня', type = 'primary' } = element.props || {};
+  const props = element?.props || {};
+  const ts = textStyles(props);
   const updateElementProps = useStore((s) => s.updateElementProps);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -55,7 +59,6 @@ export default function ButtonElement({ element, isSelected }) {
     setIsEditing(true);
   };
 
-  // 🔹 РЕЖИМ РЕДАКТИРОВАНИЯ
   if (isEditing) {
     return (
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -63,9 +66,7 @@ export default function ButtonElement({ element, isSelected }) {
           ref={inputRef}
           type="text"
           defaultValue={text}
-          onChange={(e) => {
-            editValueRef.current = e.target.value;
-          }}
+          onChange={(e) => { editValueRef.current = e.target.value; }}
           onBlur={saveText}
           onKeyDown={(e) => {
             if (e.key === 'Enter') { e.preventDefault(); saveText(); }
@@ -74,51 +75,23 @@ export default function ButtonElement({ element, isSelected }) {
           onPointerDownCapture={(e) => e.stopPropagation()}
           onMouseDownCapture={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
-          spellCheck={false}
-          autoComplete="off"
-          autoCapitalize="off"
           style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
-            background: 'rgba(255, 255, 255, 0.9)', // Полупрозрачный белый фон для читаемости
-            textAlign: 'center',
-            fontSize: 16,
-            fontWeight: 500,
-            outline: 'none',
-            color: '#000', // Чёрный текст всегда виден
-            cursor: 'text',
-            fontFamily: 'inherit',
-            pointerEvents: 'auto',
-            borderRadius: 4,
-            padding: '4px 8px',
-            // Убираем синее выделение
-            WebkitUserSelect: 'text',
-            MozUserSelect: 'text',
-            userSelect: 'text',
+            width: '100%', height: '100%', border: 'none',
+            background: 'rgba(255,255,255,0.9)', textAlign: 'center',
+            ...ts, outline: 'none', cursor: 'text', fontFamily: 'inherit',
+            pointerEvents: 'auto', borderRadius: 4, padding: '4px 8px',
+            WebkitUserSelect: 'text', userSelect: 'text',
           }}
         />
       </div>
     );
   }
 
-  // 🔹 ОБЫЧНЫЙ РЕЖИМ
   return (
-    <div 
-      style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       onDoubleClick={handleDoubleClick}
     >
-      <Button
-        type={type}
-        block
-        style={{
-          width: '100%',
-          height: '100%',
-          fontSize: 16,
-          fontWeight: 500,
-          pointerEvents: 'auto',
-        }}
-      >
+      <Button type={type} block style={{ width: '100%', height: '100%', ...ts, pointerEvents: 'auto' }}>
         {text}
       </Button>
     </div>

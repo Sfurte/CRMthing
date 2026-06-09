@@ -1,153 +1,49 @@
-import { useState, useRef, useEffect } from 'react';
-import useStore from '../store';
+import { Input } from 'antd';
+import { FormOutlined } from '@ant-design/icons';
+import { textBlock, textStyles } from './blocks/textStyle';
 
 export const definition = {
   type: 'Input',
   label: 'Текстовое поле',
-  icon: null,
+  icon: FormOutlined,
   defaultProps: {
+    label: 'Текст',
     placeholder: 'Введите текст...',
-    label: 'Подпись',
-    value: '',
-    bgColor: '#ffffff',
-    textColor: '#000000',
-    borderColor: '#d9d9d9',
-    fontSize: 14,
+    size: 'middle',
+    showLabel: true,
+    ...textBlock.defaultProps,
   },
   properties: [
     { name: 'label', label: 'Подпись', type: 'text' },
     { name: 'placeholder', label: 'Плейсхолдер', type: 'text' },
-    { name: 'bgColor', label: 'Фон', type: 'color' },
-    { name: 'textColor', label: 'Цвет текста', type: 'color' },
-    { name: 'borderColor', label: 'Цвет рамки', type: 'color' },
-    { name: 'fontSize', label: 'Размер шрифта', type: 'number', min: 10, max: 24 },
+    { name: 'size', label: 'Размер', type: 'select', options: ['large', 'middle', 'small'] },
+    { name: 'showLabel', label: 'Показывать подпись', type: 'checkbox' },
+    ...textBlock.properties,
   ],
 };
 
-// 🔹 Универсальный инлайн-редактор
-const EditableInline = ({ value, onSave, isMultiline = false, style, textColor, bgColor, borderColor }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(value);
-  const inputRef = useRef(null);
-
-  useEffect(() => { setEditValue(value); }, [value]);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-        if (!isMultiline) inputRef.current?.select();
-      }, 10);
-      return () => clearTimeout(timer);
-    }
-  }, [isEditing, isMultiline]);
-
-  const handleSave = () => {
-    onSave(editValue);
-    setIsEditing(false);
-  };
-
-  const stopEvents = (e) => {
-    e.stopPropagation();
-    e.nativeEvent?.stopImmediatePropagation?.();
-  };
-
-  if (isEditing) {
-    const Tag = isMultiline ? 'textarea' : 'input';
-    return (
-      <Tag
-        ref={inputRef}
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
-        onBlur={handleSave}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !isMultiline) { e.preventDefault(); handleSave(); }
-          if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); }
-          stopEvents(e);
-        }}
-        onPointerDown={stopEvents}
-        onClick={stopEvents}
-        style={{
-          width: '100%',
-          background: '#fff',
-          color: '#000',
-          border: `1px solid ${borderColor || '#1890ff'}`,
-          borderRadius: 4,
-          padding: '6px 10px',
-          fontSize: 'inherit',
-          fontWeight: 'inherit',
-          outline: 'none',
-          resize: 'none',
-          boxSizing: 'border-box',
-          cursor: 'text',
-          ...style
-        }}
-        rows={isMultiline ? 2 : undefined}
-      />
-    );
-  }
-
-  return (
-    <div
-      onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
-      style={{
-        cursor: 'text',
-        padding: '6px 10px',
-        borderRadius: 4,
-        minHeight: 20,
-        color: textColor || '#000',
-        background: bgColor || 'transparent',
-        ...style
-      }}
-    >
-      {value ?? (isMultiline ? '' : '—')}
-    </div>
-  );
-};
-
 export default function InputElement({ element, isSelected }) {
-  const updateElementProps = useStore((s) => s.updateElementProps);
-  const props = element?.props || definition.defaultProps;
-  
-  const { label, placeholder, value, bgColor, textColor, borderColor, fontSize } = props;
+  const props = element.props || {};
+  const { label = 'Текст', placeholder, size = 'middle', showLabel = true } = props;
+  const ts = textStyles(props);
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        pointerEvents: 'auto',
-      }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Редактируемая подпись */}
-      <EditableInline
-        value={label}
-        textColor={textColor}
-        bgColor="transparent"
-        borderColor={borderColor}
-        onSave={(val) => updateElementProps(element.id, { label: val })}
-        style={{ fontSize: Number(fontSize) || 14, fontWeight: 500, marginBottom: 4, padding: '2px 10px' }}
-      />
-
-      {/* Редактируемое поле ввода */}
-      <EditableInline
-        value={placeholder}
-        isMultiline={false}
-        textColor={textColor}
-        bgColor={bgColor}
-        borderColor={borderColor}
-        onSave={(val) => updateElementProps(element.id, { placeholder: val })}
-        style={{
-          fontSize: Number(fontSize) || 14,
-          border: `1px solid ${borderColor || '#d9d9d9'}`,
-          background: bgColor || '#fff',
-          color: textColor || '#000',
-          opacity: value ? 1 : 0.6, // Плейсхолдер чуть прозрачнее
-        }}
+    <div style={{
+      display: 'flex', flexDirection: 'column', gap: 4,
+      width: '100%', height: '100%',
+      pointerEvents: isSelected ? 'none' : 'auto',
+    }}>
+      {showLabel && (
+        <label style={{ ...ts, fontWeight: 500, userSelect: 'none', marginBottom: 2 }}>
+          {label}
+        </label>
+      )}
+      <Input
+        placeholder={placeholder}
+        size={size}
+        onMouseDown={(e) => e.stopPropagation()}
+        onFocus={(e) => e.stopPropagation()}
+        style={{ width: '100%' }}
       />
     </div>
   );

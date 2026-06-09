@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Collapse } from 'antd';
 import useStore, { selectActivePageElements } from '../store';
 import { ELEMENT_DEFINITIONS } from '../elements';
 
@@ -21,18 +22,12 @@ const styles = {
   },
   title: { fontFamily: 'Inter', fontWeight: 500, fontSize: 20, lineHeight: '24px', color: '#202020' },
   sectionLabel: { fontFamily: 'Inter', fontWeight: 500, fontSize: 16, lineHeight: '20px', color: '#202020', marginBottom: 6 },
-  inputGroup: { marginBottom: 16 },
+  inputGroup: { marginBottom: 12 },
   label: { fontFamily: 'Inter', fontWeight: 500, fontSize: 14, lineHeight: '20px', color: '#202020', display: 'block', marginBottom: 6 },
   input: { width: '100%', padding: '10px 14px', background: '#FFFFFF', border: '1px solid #D4D4D4', borderRadius: 8, boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)', fontFamily: 'Inter', fontSize: 14, color: '#202020', boxSizing: 'border-box' },
   select: { width: '100%', padding: '10px 14px', background: '#FFFFFF', border: '1px solid #D4D4D4', borderRadius: 8, boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)', fontFamily: 'Inter', fontSize: 14, color: '#202020', boxSizing: 'border-box', cursor: 'pointer' },
   colorInput: { width: '100%', height: 36, padding: 4, border: '1px solid #D4D4D4', borderRadius: 8, cursor: 'pointer' },
-  checkbox: { display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' },
-  columnEditor: { padding: 12, border: '1px solid #e8e8e8', borderRadius: 8, marginBottom: 12, background: '#fafafa' },
-  breakpointRow: { marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 },
-  breakpointLabel: { fontSize: 11, width: 80, color: '#666' },
-  breakpointInput: { flex: 1, padding: '4px 8px', borderRadius: 4, border: '1px solid #d9d9d9', fontSize: 12 },
-  applyButton: { marginTop: 8, width: '100%', padding: '8px', background: '#1677ff', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 13 },
-  infoText: { fontSize: 11, color: '#888', marginTop: 4 },
+  checkbox: { display: 'flex', alignItems: 'center', cursor: 'pointer' },
 };
 
 export default function LeftPanel() {
@@ -92,13 +87,43 @@ export default function LeftPanel() {
           </select>
         );
       case 'checkbox':
-        return <label key={prop.name} style={styles.checkbox}><input type="checkbox" checked={!!value} onChange={(e) => handlePropChange(prop.name, e.target.checked)} /><span>{prop.label}</span></label>;
+        return <label key={prop.name} style={styles.checkbox}><input type="checkbox" checked={!!value} onChange={(e) => handlePropChange(prop.name, e.target.checked)} /></label>;
       case 'color':
         return <input key={prop.name} type="color" value={value || '#000000'} onChange={(e) => handlePropChange(prop.name, e.target.value)} style={styles.colorInput} />;
       default:
         return null;
     }
   };
+
+  // Group properties by their `group` field
+  const { grouped, ungrouped } = useMemo(() => {
+    const props = meta?.properties || [];
+    const groups = {};
+    const alone = [];
+    props.forEach((p) => {
+      if (p.group) {
+        if (!groups[p.group]) groups[p.group] = [];
+        groups[p.group].push(p);
+      } else {
+        alone.push(p);
+      }
+    });
+    return { grouped: groups, ungrouped: alone };
+  }, [meta]);
+
+  const collapseItems = useMemo(() =>
+    Object.entries(grouped).map(([groupName, groupProps]) => ({
+      key: groupName,
+      label: groupName,
+      children: groupProps.map((prop) => (
+        <div key={prop.name} style={styles.inputGroup}>
+          <label style={styles.label}>{prop.label}</label>
+          {renderPropertyEditor(prop)}
+        </div>
+      )),
+    })),
+    [grouped, propValues]
+  );
 
   return (
     <div style={styles.panel}>
@@ -116,12 +141,26 @@ export default function LeftPanel() {
             <input type="number" value={yStr} onChange={handleYChange} style={styles.input} />
           </div>
 
-          {meta?.properties?.map(prop => (
+          {ungrouped.map((prop) => (
             <div key={prop.name} style={styles.inputGroup}>
               <label style={styles.label}>{prop.label}</label>
               {renderPropertyEditor(prop)}
             </div>
           ))}
+
+          {collapseItems.length > 0 && (
+            <Collapse
+              ghost
+              items={collapseItems}
+              defaultActiveKey={collapseItems.map((c) => c.key)}
+              style={{ margin: 0 }}
+              styles={{
+                header: { padding: '12px 0', fontSize: 16, fontWeight: 500, color: '#202020', borderBottom: 'none' },
+                body: { padding: 0, border: 'none' },
+                content: { border: 'none' },
+              }}
+            />
+          )}
         </>
       ) : (
         <div style={{ fontFamily: 'Inter', fontSize: 14, color: '#999' }}>Выберите элемент на холсте</div>

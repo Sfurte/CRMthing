@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { BorderOutlined } from '@ant-design/icons';
 import useStore from '../store';
+import { textBlock, textStyles } from './blocks/textStyle';
 
 export const definition = {
   type: 'Container',
@@ -8,139 +9,103 @@ export const definition = {
   icon: BorderOutlined,
   defaultProps: {
     text: 'Контейнер',
-    bgColor: '#f5f5f5',    // Светло-серый фон по умолчанию
-    textColor: '#000000',  // Черный текст
+    bgColor: '#f5f5f5',
     padding: 16,
+    ...textBlock.defaultProps,
   },
   properties: [
     { name: 'text', label: 'Текст', type: 'text' },
     { name: 'bgColor', label: 'Фон', type: 'color' },
-    { name: 'textColor', label: 'Цвет текста', type: 'color' },
     { name: 'padding', label: 'Отступ', type: 'number', min: 0, max: 50 },
+    ...textBlock.properties,
   ],
 };
 
-// 🔹 Компонент редактируемого текста (универсальный)
-const EditableText = ({ value, onSave, isMultiline = false, style, textColor, isEditing: forcedEditing }) => {
+const EditableText = ({ value, onSave, style, elementProps }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
   const inputRef = useRef(null);
-
-  const activeEditing = forcedEditing || isEditing;
+  const ts = textStyles(elementProps);
 
   useEffect(() => {
-    if (activeEditing && inputRef.current) {
+    if (isEditing && inputRef.current) {
       const timer = setTimeout(() => {
         inputRef.current?.focus();
         inputRef.current?.select();
       }, 10);
       return () => clearTimeout(timer);
     }
-  }, [activeEditing]);
+  }, [isEditing]);
 
   useEffect(() => { setEditValue(value); }, [value]);
 
-  const handleSave = () => {
-    onSave(editValue);
-    if (!forcedEditing) setIsEditing(false);
-  };
+  const handleSave = () => { onSave(editValue); setIsEditing(false); };
+  const stop = (e) => { e.stopPropagation(); e.nativeEvent?.stopImmediatePropagation?.(); };
 
-  const stopEvents = (e) => {
-    e.stopPropagation();
-    e.nativeEvent?.stopImmediatePropagation?.();
-  };
-
-  if (activeEditing) {
-    const Tag = isMultiline ? 'textarea' : 'input';
+  if (isEditing) {
     return (
-      <Tag
+      <input
         ref={inputRef}
+        type="text"
         value={editValue}
         onChange={(e) => setEditValue(e.target.value)}
         onBlur={handleSave}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !isMultiline) { e.preventDefault(); handleSave(); }
-          if (e.key === 'Escape') { setEditValue(value); if (!forcedEditing) setIsEditing(false); }
-          stopEvents(e);
+          if (e.key === 'Enter') { e.preventDefault(); handleSave(); }
+          if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); }
+          stop(e);
         }}
-        onPointerDown={stopEvents}
-        onClick={stopEvents}
+        onPointerDown={stop}
+        onClick={stop}
         style={{
-          width: '100%',
-          border: `1px solid ${textColor || '#1890ff'}`,
-          background: '#fff',
-          padding: '4px 8px',
-          fontSize: isMultiline ? 14 : 14,
-          fontWeight: 'inherit',
-          outline: 'none',
-          borderRadius: 4,
-          boxSizing: 'border-box',
-          color: textColor || '#000',
-          cursor: 'text',
-          resize: isMultiline ? 'vertical' : 'none',
-          minHeight: isMultiline ? 60 : 'auto',
-          ...style
+          width: '100%', border: '1px solid #1890ff', background: '#fff',
+          padding: '2px 4px', ...ts, outline: 'none', borderRadius: 2,
+          boxSizing: 'border-box', cursor: 'text', ...style,
         }}
-        rows={isMultiline ? 3 : undefined}
       />
     );
   }
 
   return (
-    <div
-      onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
-      style={{
-        cursor: 'text',
-        padding: '4px 8px',
-        minHeight: 20,
-        color: textColor || '#000',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        ...style
-      }}
+    <div onDoubleClick={(e) => { stop(e); setIsEditing(true); }}
+      style={{ cursor: 'text', padding: '2px 4px', minHeight: 20, ...ts, ...style }}
     >
       {value ?? '—'}
     </div>
   );
 };
 
-export default function ContainerElement({ element, isSelected, children }) {
+export default function ContainerElement({ element, isSelected }) {
   const updateElementProps = useStore((s) => s.updateElementProps);
-  
   const props = element?.props || definition.defaultProps;
-  const { text, bgColor, textColor, padding } = props;
+  const { text, bgColor, padding = 16 } = props;
 
   return (
     <div
       style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: bgColor || '#f5f5f5',
-        color: textColor || '#000',
-        padding: Number(padding) || 16,
-        boxSizing: 'border-box',
+        width: '100%', height: '100%',
+        background: bgColor || '#f5f5f5',
+        border: '1px solid #E0E0E0',
         borderRadius: 8,
-        border: isSelected ? '2px dashed #1890ff' : '1px dashed #d9d9d9',
+        display: 'flex', flexDirection: 'column',
         overflow: 'hidden',
-        position: 'relative'
+        boxSizing: 'border-box',
       }}
-      onClick={(e) => e.stopPropagation()}
     >
-      {/* Текстовая область (редактируемая) */}
-      <EditableText
-        value={text}
-        textColor={textColor}
-        onSave={(val) => updateElementProps(element.id, { text: val })}
-        style={{ width: '100%', marginBottom: children ? 8 : 0 }}
-      />
-      
-      {/* Место для вложенных элементов (если контейнер пуст, можно показать подсказку) */}
-      <div style={{ flex: 1, pointerEvents: 'auto' }}>
-        {children}
-      </div>
+      {text && (
+        <div
+          style={{
+            padding: `${padding}px ${padding}px 0 ${padding}px`,
+            userSelect: 'none',
+          }}
+        >
+          <EditableText
+            value={text}
+            elementProps={props}
+            onSave={(val) => updateElementProps(element.id, { text: val })}
+          />
+        </div>
+      )}
     </div>
   );
 }
