@@ -20,7 +20,7 @@ export default function Dashboard() {
     .sort((a, b) => b[1].lastOpened - a[1].lastOpened);
 
   return (
-    <div className="dashboard-content" style={{ padding: '30px 40px' }}>
+    <div className="dashboard-content">
       <div className="dashboard-header">
         <h1 className="dashboard-title">{t('projects')}</h1>
       </div>

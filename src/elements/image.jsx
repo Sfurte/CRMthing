@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { PictureOutlined, UploadOutlined } from '@ant-design/icons';
 import useStore from '../store';
+import './image.css';
 
 export const definition = {
   type: 'Image',

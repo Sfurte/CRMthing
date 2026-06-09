@@ -1,0 +1,48 @@
+/* ═══════════════════════════════════════════
+   Grid Element
+   ═══════════════════════════════════════════ */
+
+.element-grid {
+  width: 100%;
+  height: 100%;
+  padding: var(--space-2);
+  box-sizing: border-box;
+  border-radius: var(--radius-md);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.element-grid__inner {
+  display: grid;
+  width: 100%;
+  height: 100%;
+}
+
+.element-grid__cell {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.element-grid__cell-input {
+  width: 90%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  outline: none;
+  font-family: inherit;
+}
+
+.element-grid__cell-text {
+  padding: var(--space-1);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}

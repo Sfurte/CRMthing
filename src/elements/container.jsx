@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { BorderOutlined } from '@ant-design/icons';
 import useStore from '../store';
 import { textBlock, textStyles } from './blocks/textStyle';
+import './container.css';
 
 export const definition = {
   type: 'Container',
@@ -82,15 +83,8 @@ export default function ContainerElement({ element, isSelected }) {
 
   return (
     <div
-      style={{
-        width: '100%', height: '100%',
-        background: bgColor || '#f5f5f5',
-        border: '1px solid #E0E0E0',
-        borderRadius: 8,
-        display: 'flex', flexDirection: 'column',
-        overflow: 'hidden',
-        boxSizing: 'border-box',
-      }}
+      className="element-container"
+      style={{ background: bgColor || '#f5f5f5' }}
     >
       {text && (
         <div

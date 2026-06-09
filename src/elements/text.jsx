@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { FontSizeOutlined } from '@ant-design/icons';
 import useStore from '../store';
 import { textBlock, textStyles } from './blocks/textStyle';
+import './text.css';
 
 export const definition = {
   type: 'Text',
@@ -65,15 +66,8 @@ export default function TextElement({ element }) {
 
   return (
     <div
-      style={{
-        width: '100%',
-        height: '100%',
-        backgroundColor: bgColor || 'transparent',
-        padding: 4,
-        boxSizing: 'border-box',
-        borderRadius: 4,
-        overflow: 'hidden',
-      }}
+      className="element-text"
+      style={{ backgroundColor: bgColor || 'transparent' }}
       onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
     >
       {isEditing ? (
@@ -92,16 +86,11 @@ export default function TextElement({ element }) {
           style={{
             ...textStyle,
             background: 'transparent',
-            border: '1px dashed rgba(0,0,0,0.2)',
-            outline: 'none',
-            resize: 'none',
-            cursor: 'text',
-            padding: 0,
-            margin: 0,
           }}
+          className="element-text__textarea"
         />
       ) : (
-        <div style={{ ...textStyle, cursor: 'text' }}>
+        <div className="element-text__content" style={{ ...textStyle, cursor: 'text' }}>
           {content}
         </div>
       )}

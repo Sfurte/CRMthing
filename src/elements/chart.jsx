@@ -3,6 +3,7 @@ import { BarChartOutlined, CloseOutlined, PlusOutlined, DeleteOutlined, CheckOut
 import { Button, Space } from 'antd';
 import { Column, Line, Pie, Area, Bar } from '@ant-design/charts';
 import useStore from '../store';
+import './chart.css';
 
 export const definition = {
   type: 'Chart',

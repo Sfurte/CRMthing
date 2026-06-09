@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { AppstoreOutlined } from '@ant-design/icons';
 import useStore from '../store';
+import './grid.css';
 
 export const definition = {
   type: 'Grid',

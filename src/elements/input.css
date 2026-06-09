@@ -1,0 +1,17 @@
+/* ═══════════════════════════════════════════
+   Input Element
+   ═══════════════════════════════════════════ */
+
+.element-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  height: 100%;
+}
+
+.element-input__label {
+  font-weight: var(--font-weight-medium);
+  user-select: none;
+  margin-bottom: 2px;
+}

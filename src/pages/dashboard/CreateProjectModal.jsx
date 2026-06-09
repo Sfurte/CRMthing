@@ -58,7 +58,6 @@ export default function CreateProjectModal({ isOpen, onClose }) {
             className="dashboard-modal-btn-save"
             onClick={handleCreate}
             disabled={!name.trim()}
-            style={{ opacity: name.trim() ? 1 : 0.5 }}
           >
             Создать
           </button>

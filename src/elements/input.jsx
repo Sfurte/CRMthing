@@ -1,6 +1,7 @@
 import { Input } from 'antd';
 import { FormOutlined } from '@ant-design/icons';
 import { textBlock, textStyles } from './blocks/textStyle';
+import './input.css';
 
 export const definition = {
   type: 'Input',
@@ -28,11 +29,7 @@ export default function InputElement({ element, isSelected }) {
   const ts = textStyles(props);
 
   return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', gap: 4,
-      width: '100%', height: '100%',
-      pointerEvents: isSelected ? 'none' : 'auto',
-    }}>
+    <div className="element-input" style={{ pointerEvents: isSelected ? 'none' : 'auto' }}>
       {showLabel && (
         <label style={{ ...ts, fontWeight: 500, userSelect: 'none', marginBottom: 2 }}>
           {label}

@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════
+   LeftPanel — Properties Inspector
+   ═══════════════════════════════════════════ */
+
+.left-panel {
+  width: var(--left-panel-width);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-color);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.left-panel__title {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-lg);
+  line-height: 24px;
+  color: var(--text-primary);
+}
+
+.left-panel__section-label {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-md);
+  line-height: 20px;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.left-panel__input-group {
+  margin-bottom: var(--space-3);
+}
+
+.left-panel__label {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.left-panel__input,
+.left-panel__select {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.left-panel__select {
+  cursor: pointer;
+}
+
+.left-panel__color-input {
+  width: 100%;
+  height: 36px;
+  padding: 4px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.left-panel__checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: var(--space-2);
+}
+
+.left-panel__empty {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}
+
+/* ── Collapse overrides ── */
+.left-panel .ant-collapse {
+  margin: 0;
+}
+
+.left-panel .ant-collapse-header {
+  padding: var(--space-3) 0 !important;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  border-bottom: none !important;
+  align-items: center;
+}
+
+.left-panel .ant-collapse-content-box {
+  padding: 0 !important;
+  border: none !important;
+}
+
+.left-panel .ant-collapse-content {
+  border: none !important;
+}

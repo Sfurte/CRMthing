@@ -3,6 +3,7 @@ import { Card } from 'antd';
 import { CreditCardOutlined } from '@ant-design/icons';
 import useStore from '../store';
 import { textBlock, textStyles } from './blocks/textStyle';
+import './card.css';
 
 export const definition = {
   type: 'Card',
@@ -88,11 +89,8 @@ export default function CardElement({ element }) {
   return (
     <Card
       title={<EditableText value={title} elementProps={props} onSave={(val) => updateElementProps(element.id, { title: val })} style={{ fontWeight: 600, padding: 0 }} />}
-      style={{
-        width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
-        backgroundColor: bgColor || '#fff', border: '1px solid #d9d9d9',
-        boxShadow: '0 1px 2px 0 rgba(0,0,0,0.03)',
-      }}
+      className="element-card"
+      style={{ backgroundColor: bgColor || '#fff' }}
       styles={{ body: { flex: 1, overflow: 'auto', padding: '12px 16px' } }}
     >
       <EditableText value={content} elementProps={props} onSave={(val) => updateElementProps(element.id, { content: val })} isMultiline style={{ width: '100%', minHeight: '100%', background: 'transparent' }} />

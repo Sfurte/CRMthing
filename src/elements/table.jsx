@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Table } from 'antd';
 import useStore from '../store';
+import './table.css';
 
 export const definition = {
   type: 'Table',
@@ -192,7 +193,7 @@ export default function TableElement({ element, isSelected }) {
   }));
 
   return (
-    <div style={{ width: '100%', height: '100%', padding: 4, userSelect: 'none' }}>
+    <div className="element-table__wrapper">
       <Table
         columns={columns}
         dataSource={dataSource}

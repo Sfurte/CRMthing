@@ -8,6 +8,7 @@ import Canvas from '../components/Canvas';
 import PagesInspector from '../components/PagesInspector';
 import useStore from '../store';
 import { TransformProvider, useTransformRef } from '../contexts/TransformContext';
+import './EditorShell.css';
 
 function toCanvasCoords(screenX, screenY, canvasRect, transform) {
   return {
@@ -172,14 +173,14 @@ function EditorContent() {
 
   return (
     <DndContext onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <div className="editor-shell">
         <Header title={projects[projectId]?.name || 'Dashboard'} onBack={() => navigate('/')} />
         
-        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        <div className="editor-shell__body">
           <LeftPanel />
-          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+          <div className="editor-shell__center">
             <Toolbar />
-            <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+            <div className="editor-shell__canvas-wrapper">
               <Canvas
                 canvasRectRef={canvasRectRef}
                 onElementContextMenu={handleElementContextMenu}

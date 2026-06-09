@@ -3,6 +3,7 @@ import { Button } from 'antd';
 import { InteractionOutlined } from '@ant-design/icons';
 import useStore from '../store';
 import { textBlock, textStyles } from './blocks/textStyle';
+import './button.css';
 
 export const definition = {
   type: 'Button',
@@ -61,10 +62,11 @@ export default function ButtonElement({ element }) {
 
   if (isEditing) {
     return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="element-button">
         <input
           ref={inputRef}
           type="text"
+          className="element-button__edit-input"
           defaultValue={text}
           onChange={(e) => { editValueRef.current = e.target.value; }}
           onBlur={saveText}
@@ -75,22 +77,14 @@ export default function ButtonElement({ element }) {
           onPointerDownCapture={(e) => e.stopPropagation()}
           onMouseDownCapture={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
-          style={{
-            width: '100%', height: '100%', border: 'none',
-            background: 'rgba(255,255,255,0.9)', textAlign: 'center',
-            ...ts, outline: 'none', cursor: 'text', fontFamily: 'inherit',
-            pointerEvents: 'auto', borderRadius: 4, padding: '4px 8px',
-            WebkitUserSelect: 'text', userSelect: 'text',
-          }}
+          style={{ ...ts }}
         />
       </div>
     );
   }
 
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      onDoubleClick={handleDoubleClick}
-    >
+    <div className="element-button" onDoubleClick={handleDoubleClick}>
       <Button type={type} block style={{ width: '100%', height: '100%', ...ts, pointerEvents: 'auto' }}>
         {text}
       </Button>

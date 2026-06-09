@@ -1,0 +1,53 @@
+/* ═══════════════════════════════════════════
+   AppLayout — Dashboard Sidebar Layout
+   ═══════════════════════════════════════════ */
+
+.app-layout {
+  height: 100vh;
+}
+
+.app-layout__sider {
+  background: var(--bg-surface) !important;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.app-layout__profile {
+  padding: var(--space-6) var(--space-5) var(--space-5);
+}
+
+.app-layout__avatar {
+  width: 48px;
+  height: 48px;
+  background-color: var(--accent);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-3);
+}
+
+.app-layout__name {
+  font-size: var(--font-size-md);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.app-layout__email {
+  font-size: 13px;
+}
+
+.app-layout__menu {
+  border-right: none !important;
+  font-size: 15px;
+}
+
+.app-layout__content {
+  background: var(--bg-canvas);
+  overflow: auto;
+}

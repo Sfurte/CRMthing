@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Radio } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons'; // ✅ Исправлено
 import useStore from '../store';
+import './radio.css';
 
 export const definition = {
   type: 'Radio',

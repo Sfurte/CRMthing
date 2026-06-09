@@ -6,14 +6,8 @@ import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import { ELEMENT_DEFINITIONS } from '../elements';
 import useStore from '../store';
 import ZoomControl from './ZoomControl';
+import './Toolbar.css';
 
-const dividerStyle = {
-  width: 0,
-  height: 18,
-  borderLeft: '1px solid #ACACAC',
-};
-
-/** Map element types to category keys */
 const typeToCategory = {
   Table: 'data',
   Chart: 'data',
@@ -36,7 +30,6 @@ const categories = [
 export default function Toolbar() {
   const addElement = useStore((s) => s.addElement);
 
-  /** Build a lookup: type → definition */
   const defByType = {};
   ELEMENT_DEFINITIONS.forEach((d) => { defByType[d.type] = d; });
 
@@ -59,18 +52,7 @@ export default function Toolbar() {
   };
 
   return (
-    <div
-      style={{
-        height: 44,
-        background: '#FFFFFF',
-        borderBottom: '1px solid #E0E0E0',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: '4px 20px',
-        gap: 8,
-      }}
-    >
+    <div className="toolbar">
       <Dropdown
         menu={{
           items: menuItems,
@@ -85,7 +67,7 @@ export default function Toolbar() {
         </Button>
       </Dropdown>
 
-      <div style={dividerStyle} />
+      <div className="toolbar__divider" />
       <ZoomControl />
     </div>
   );

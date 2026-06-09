@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Menu, Typography } from 'antd';
 import { FolderOutlined, SettingOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useTranslation } from '../i18n';
+import './AppLayout.css';
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
@@ -26,51 +27,28 @@ export default function AppLayout() {
   };
 
   return (
-    <Layout style={{ height: '100vh' }}>
+    <Layout className="app-layout">
       <Sider
         width={280}
-        style={{
-          background: '#fff',
-          borderRight: '1px solid #e8ecf0',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'auto',
-        }}
+        className="app-layout__sider"
       >
-        {/* Profile */}
-        <div style={{ padding: '24px 20px 20px' }}>
-          <div
-            style={{
-              width: 48, height: 48,
-              backgroundColor: '#3B82F6',
-              borderRadius: 12,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontSize: 20, fontWeight: 700,
-              marginBottom: 12,
-            }}
-          >
-            JD
-          </div>
-          <Text strong style={{ fontSize: 16, display: 'block', marginBottom: 2 }}>
-            John Doe
-          </Text>
-          <Text type="secondary" style={{ fontSize: 13 }}>
-            john@example.com
-          </Text>
+        <div className="app-layout__profile">
+          <div className="app-layout__avatar">JD</div>
+          <Text strong className="app-layout__name">John Doe</Text>
+          <Text type="secondary" className="app-layout__email">john@example.com</Text>
         </div>
 
-        {/* Navigation */}
         <Menu
           mode="inline"
           selectedKeys={[selectedKey]}
           items={menuItems}
           onClick={handleMenuClick}
-          style={{ borderRight: 'none', fontSize: 15 }}
+          className="app-layout__menu"
         />
       </Sider>
 
       <Layout>
-        <Content style={{ background: '#F0F7FF', overflow: 'auto' }}>
+        <Content className="app-layout__content">
           <Outlet />
         </Content>
       </Layout>
