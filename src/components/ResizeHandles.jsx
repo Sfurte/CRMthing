@@ -6,6 +6,8 @@ import './ResizeHandles.css';
 const handlePositions = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
 
 export default function ResizeHandles({ element }) {
+  const resizeElement = useStore((s) => s.resizeElement);
+  const setElementPosition = useStore((s) => s.setElementPosition);
   const transformRef = useContext(TransformContext);
 
   const isResizing = useRef(false);
@@ -52,36 +54,16 @@ export default function ResizeHandles({ element }) {
       newY = startElPos.current.y + (startSize.current.h - 20);
     }
 
-    // Atomic update: position + size in a single setState call
-    const state = useStore.getState();
-    const page = state.projects[state.activeProjectId]?.pages[state.activePageId];
-    if (!page) return;
-
-    const newElements = page.elements.map((el) =>
-      el.id === element.id
-        ? { ...el, x: Math.round(newX), y: Math.round(newY), width: clampedW, height: clampedH }
-        : el
-    );
-
-    useStore.setState({
-      projects: {
-        ...state.projects,
-        [state.activeProjectId]: {
-          ...state.projects[state.activeProjectId],
-          pages: {
-            ...state.projects[state.activeProjectId].pages,
-            [state.activePageId]: { ...page, elements: newElements },
-          },
-        },
-      },
-    });
-  }, [element.id, transformRef]);
+    setElementPosition(element.id, Math.round(newX), Math.round(newY));
+    resizeElement(element.id, clampedW, clampedH);
+  }, [element.id, resizeElement, setElementPosition, transformRef]);
 
   const handlePointerUp = useCallback(() => {
     isResizing.current = false;
     activeHandle.current = null;
     document.body.style.cursor = '';
     document.body.style.userSelect = '';
+
     window.removeEventListener('pointermove', handlePointerMove);
     window.removeEventListener('pointerup', handlePointerUp);
   }, [handlePointerMove]);

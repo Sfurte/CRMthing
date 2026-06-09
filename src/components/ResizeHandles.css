@@ -13,11 +13,11 @@
   pointer-events: auto;
 }
 
-.resize-handle--n  { top: -5px;   left: 50%;    transform: translateX(-50%); cursor: ns-resize; }
-.resize-handle--s  { bottom: -5px; left: 50%;    transform: translateX(-50%); cursor: ns-resize; }
-.resize-handle--e  { right: -5px;  top: 50%;     transform: translateY(-50%); cursor: ew-resize; }
-.resize-handle--w  { left: -5px;   top: 50%;     transform: translateY(-50%); cursor: ew-resize; }
-.resize-handle--ne { top: -5px;    right: -5px;  cursor: nesw-resize; }
-.resize-handle--nw { top: -5px;    left: -5px;   cursor: nwse-resize; }
-.resize-handle--se { bottom: -5px; right: -5px;  cursor: nwse-resize; }
-.resize-handle--sw { bottom: -5px; left: -5px;   cursor: nesw-resize; }
+.resize-handle--n  { top: -7px;   left: 50%;    transform: translateX(-50%); cursor: ns-resize; }
+.resize-handle--s  { bottom: -7px; left: 50%;   transform: translateX(-50%); cursor: ns-resize; }
+.resize-handle--e  { right: -7px;  top: 50%;    transform: translateY(-50%); cursor: ew-resize; }
+.resize-handle--w  { left: -7px;   top: 50%;    transform: translateY(-50%); cursor: ew-resize; }
+.resize-handle--ne { top: -7px;    right: -7px; cursor: nesw-resize; }
+.resize-handle--nw { top: -7px;    left: -7px;  cursor: nwse-resize; }
+.resize-handle--se { bottom: -7px; right: -7px; cursor: nwse-resize; }
+.resize-handle--sw { bottom: -7px; left: -7px;  cursor: nesw-resize; }
