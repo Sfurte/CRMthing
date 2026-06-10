@@ -55,7 +55,7 @@
 }
 
 .canvas-element .ant-table {
-  background: transparent;
+  background: var(--bg-surface);
 }
 
 .canvas-element .ant-table-cell {

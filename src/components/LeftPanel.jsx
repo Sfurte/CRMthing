@@ -165,16 +165,26 @@ export default function LeftPanel() {
       )}
 
       {selectedElements.length === 1 && (
-        <>
-          <div className="left-panel__input-group">
-            <label className="left-panel__label">PosX</label>
-            <input type="number" className="left-panel__input" value={xStr} onChange={handleXChange} />
-          </div>
-          <div className="left-panel__input-group">
-            <label className="left-panel__label">PosY</label>
-            <input type="number" className="left-panel__input" value={yStr} onChange={handleYChange} />
-          </div>
-        </>
+        <Collapse
+          ghost
+          items={[{
+            key: 'position',
+            label: 'Позиция',
+            children: (
+              <>
+                <div className="left-panel__input-group">
+                  <label className="left-panel__label">PosX</label>
+                  <input type="number" className="left-panel__input" value={xStr} onChange={handleXChange} />
+                </div>
+                <div className="left-panel__input-group">
+                  <label className="left-panel__label">PosY</label>
+                  <input type="number" className="left-panel__input" value={yStr} onChange={handleYChange} />
+                </div>
+              </>
+            ),
+          }]}
+          defaultActiveKey={['position']}
+        />
       )}
 
       {ungrouped.map((prop) => (
