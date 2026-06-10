@@ -391,7 +391,7 @@ const useStore = create(
           };
         }),
     }),
-    { name: 'crmthing-store' }
+    { name: 'crmthing-store', version: 1 }
   )
 );
 
