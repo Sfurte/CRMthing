@@ -46,7 +46,6 @@ function EditorContent() {
   // Close context menu on every mousedown except on action bar buttons
   useEffect(() => {
     const handler = (e) => {
-      // Don't close if clicking on an action bar button
       if (e.target.closest('[data-context-action]')) return;
       setContextTargetId(null);
     };
@@ -70,7 +69,7 @@ function EditorContent() {
       if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
         const state = useStore.getState();
         const page = state.projects[state.activeProjectId]?.pages[state.activePageId];
-        const el = page?.elements.find((el) => el.id === state.selectedId);
+        const el = page?.elements.find((el) => el.id === state.selectedIds[0]);
         if (el) {
           clipboardRef.current = {
             type: el.type,
@@ -132,11 +131,13 @@ function EditorContent() {
     [setElementPosition]
   );
 
+  // Selection is handled by onClick on the element, not by drag start
   const handleDragStart = useCallback((event) => {
-    const { active } = event;
+    const { active, activatorEvent } = event;
     const data = active.data.current;
     if (data?.isCanvasElement) {
-      selectElement(active.id);
+      const ctrl = activatorEvent?.ctrlKey || activatorEvent?.metaKey;
+      selectElement(active.id, ctrl);
     }
   }, [selectElement]);
 
@@ -162,7 +163,7 @@ function EditorContent() {
       );
       addElement(data.type, x, y);
     },
-    [addElement, selectElement]
+    [addElement]
   );
 
   const handleElementContextMenu = useCallback((e, elementId) => {

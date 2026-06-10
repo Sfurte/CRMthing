@@ -14,12 +14,12 @@ export default function DraggableElement({ element, zoom, onContextMenu, showCon
     },
   });
 
-  const selectedId = useStore((state) => state.selectedId);
+  const selectedIds = useStore((state) => state.selectedIds);
   const selectElement = useStore((state) => state.selectElement);
   const removeElement = useStore((state) => state.removeElement);
   const moveUp = useStore((state) => state.moveUp);
   const moveDown = useStore((state) => state.moveDown);
-  const isSelected = selectedId === element.id;
+  const isSelected = selectedIds.includes(element.id);
 
   const currentWidth = element.width || 200;
   const currentHeight = element.height || 100;
@@ -55,7 +55,6 @@ export default function DraggableElement({ element, zoom, onContextMenu, showCon
       style={{ left: element.x, top: element.y, width: currentWidth, height: currentHeight, zIndex: element.zIndex || 0 }}
       onClick={(e) => {
         e.stopPropagation();
-        selectElement(element.id);
       }}
       onContextMenu={(e) => {
         e.stopPropagation();

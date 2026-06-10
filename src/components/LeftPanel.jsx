@@ -9,55 +9,85 @@ ELEMENT_DEFINITIONS.forEach((d) => {
   elementMeta[d.type] = { label: d.label, properties: d.properties || [] };
 });
 
+/** Find properties that exist in ALL selected elements' definitions */
+function findCommonProperties(elements) {
+  if (elements.length === 0) return [];
+  const types = [...new Set(elements.map((el) => el.type))];
+  if (types.length === 1) {
+    // All same type → all properties of that type
+    return elementMeta[types[0]]?.properties || [];
+  }
+  // Different types → intersection of property names
+  const propSets = types.map((t) => new Set((elementMeta[t]?.properties || []).map((p) => p.name)));
+  const common = [...propSets[0]].filter((name) => propSets.every((s) => s.has(name)));
+  // Return the property definition from the first type
+  return (elementMeta[types[0]]?.properties || []).filter((p) => common.includes(p.name));
+}
+
+/** Check if all selected elements have the same value for a prop */
+function allSameValue(elements, propName) {
+  if (elements.length === 0) return true;
+  const first = elements[0]?.props?.[propName];
+  return elements.every((el) => el.props?.[propName] === first);
+}
+
 export default function LeftPanel() {
-  const selectedId = useStore((s) => s.selectedId);
+  const selectedIds = useStore((s) => s.selectedIds);
   const elements = useStore(selectActivePageElements);
   const setElementPosition = useStore((s) => s.setElementPosition);
   const updateElementProps = useStore((s) => s.updateElementProps);
 
-  const selectedElement = elements.find((el) => el.id === selectedId);
-  const meta = selectedElement ? elementMeta[selectedElement.type] : null;
+  const selectedElements = useMemo(
+    () => elements.filter((el) => selectedIds.includes(el.id)),
+    [elements, selectedIds]
+  );
 
   const [xStr, setXStr] = useState('');
   const [yStr, setYStr] = useState('');
   const [propValues, setPropValues] = useState({});
 
+  const primary = selectedElements[0] || null;
+  const meta = primary ? elementMeta[primary.type] : null;
+  const commonProps = useMemo(() => findCommonProperties(selectedElements), [selectedElements]);
+
   useEffect(() => {
-    if (selectedElement) {
-      setXStr(String(Math.round(selectedElement.x)));
-      setYStr(String(Math.round(selectedElement.y)));
-      setPropValues(selectedElement.props || {});
+    if (primary) {
+      setXStr(String(Math.round(primary.x)));
+      setYStr(String(Math.round(primary.y)));
     }
-  }, [selectedElement?.id, selectedElement?.x, selectedElement?.y, selectedElement?.props]);
+  }, [primary?.id, primary?.x, primary?.y]);
 
   const handleXChange = (e) => {
     setXStr(e.target.value);
     const val = parseFloat(e.target.value);
-    if (!isNaN(val) && selectedElement) setElementPosition(selectedElement.id, val, selectedElement.y);
+    if (!isNaN(val) && primary) setElementPosition(primary.id, val, primary.y);
   };
 
   const handleYChange = (e) => {
     setYStr(e.target.value);
     const val = parseFloat(e.target.value);
-    if (!isNaN(val) && selectedElement) setElementPosition(selectedElement.id, selectedElement.x, val);
+    if (!isNaN(val) && primary) setElementPosition(primary.id, primary.x, val);
   };
 
   const handlePropChange = useCallback((propName, value) => {
-    if (selectedElement) updateElementProps(selectedElement.id, { [propName]: value });
-  }, [selectedElement, updateElementProps]);
+    // Apply the change to ALL selected elements
+    selectedElements.forEach((el) => updateElementProps(el.id, { [propName]: value }));
+  }, [selectedElements, updateElementProps]);
 
   const renderPropertyEditor = (prop) => {
-    const value = propValues[prop.name];
+    const same = allSameValue(selectedElements, prop.name);
+    const value = same ? selectedElements[0]?.props?.[prop.name] : undefined;
 
     switch (prop.type) {
       case 'text':
       case 'textarea':
-        return <input key={prop.name} type="text" className="left-panel__input" value={value || ''} onChange={(e) => handlePropChange(prop.name, e.target.value)} />;
+        return <input key={prop.name} type="text" className="left-panel__input" value={value ?? ''} placeholder={same ? '' : '—'} onChange={(e) => handlePropChange(prop.name, e.target.value)} />;
       case 'number':
-        return <input key={prop.name} type="number" className="left-panel__input" value={value ?? ''} onChange={(e) => handlePropChange(prop.name, parseFloat(e.target.value))} min={prop.min} max={prop.max} step={prop.step || 1} />;
+        return <input key={prop.name} type="number" className="left-panel__input" value={value ?? ''} placeholder={same ? '' : '—'} onChange={(e) => handlePropChange(prop.name, parseFloat(e.target.value))} min={prop.min} max={prop.max} step={prop.step || 1} />;
       case 'select':
         return (
-          <select key={prop.name} className="left-panel__select" value={value || ''} onChange={(e) => handlePropChange(prop.name, e.target.value)}>
+          <select key={prop.name} className="left-panel__select" value={same ? (value ?? '') : ''} onChange={(e) => handlePropChange(prop.name, e.target.value)}>
+            {!same && <option value="" disabled>—</option>}
             {prop.options?.map(opt => {
               const optValue = typeof opt === 'object' ? opt.value : opt;
               const optLabel = typeof opt === 'object' ? opt.label : opt;
@@ -68,21 +98,21 @@ export default function LeftPanel() {
       case 'checkbox':
         return (
           <label key={prop.name} className="left-panel__checkbox">
-            <input type="checkbox" checked={!!value} onChange={(e) => handlePropChange(prop.name, e.target.checked)} />
+            <input type="checkbox" checked={same ? !!value : false} onChange={(e) => handlePropChange(prop.name, e.target.checked)} />
+            {!same && <span style={{ color: 'var(--text-tertiary)' }}>—</span>}
           </label>
         );
       case 'color':
-        return <input key={prop.name} type="color" className="left-panel__color-input" value={value || '#000000'} onChange={(e) => handlePropChange(prop.name, e.target.value)} />;
+        return <input key={prop.name} type="color" className="left-panel__color-input" value={same ? (value || '#000000') : '#000000'} onChange={(e) => handlePropChange(prop.name, e.target.value)} />;
       default:
         return null;
     }
   };
 
   const { grouped, ungrouped } = useMemo(() => {
-    const props = meta?.properties || [];
     const groups = {};
     const alone = [];
-    props.forEach((p) => {
+    commonProps.forEach((p) => {
       if (p.group) {
         if (!groups[p.group]) groups[p.group] = [];
         groups[p.group].push(p);
@@ -91,7 +121,7 @@ export default function LeftPanel() {
       }
     });
     return { grouped: groups, ungrouped: alone };
-  }, [meta]);
+  }, [commonProps]);
 
   const collapseItems = useMemo(() =>
     Object.entries(grouped).map(([groupName, groupProps]) => ({
@@ -104,16 +134,38 @@ export default function LeftPanel() {
         </div>
       )),
     })),
-    [grouped, propValues]
+    [grouped, selectedElements, propValues]
   );
+
+  if (selectedElements.length === 0) {
+    return (
+      <div className="left-panel">
+        <div className="left-panel__title">Свойства</div>
+        <div className="left-panel__empty">Выберите элемент на холсте</div>
+      </div>
+    );
+  }
 
   return (
     <div className="left-panel">
-      <div className="left-panel__title">Свойства</div>
-      {selectedElement ? (
-        <>
-          <div className="left-panel__section-label">{meta?.label || selectedElement.type}</div>
+      <div className="left-panel__title">
+        {selectedElements.length > 1
+          ? `Выбрано: ${selectedElements.length} элементов`
+          : 'Свойства'}
+      </div>
 
+      {selectedElements.length > 1 && (
+        <div className="left-panel__section-label">
+          {selectedElements.map((el) => elementMeta[el.type]?.label || el.type).join(', ')}
+        </div>
+      )}
+
+      {selectedElements.length === 1 && (
+        <div className="left-panel__section-label">{meta?.label || primary.type}</div>
+      )}
+
+      {selectedElements.length === 1 && (
+        <>
           <div className="left-panel__input-group">
             <label className="left-panel__label">PosX</label>
             <input type="number" className="left-panel__input" value={xStr} onChange={handleXChange} />
@@ -122,24 +174,22 @@ export default function LeftPanel() {
             <label className="left-panel__label">PosY</label>
             <input type="number" className="left-panel__input" value={yStr} onChange={handleYChange} />
           </div>
-
-          {ungrouped.map((prop) => (
-            <div key={prop.name} className="left-panel__input-group">
-              <label className="left-panel__label">{prop.label}</label>
-              {renderPropertyEditor(prop)}
-            </div>
-          ))}
-
-          {collapseItems.length > 0 && (
-            <Collapse
-              ghost
-              items={collapseItems}
-              defaultActiveKey={collapseItems.map((c) => c.key)}
-            />
-          )}
         </>
-      ) : (
-        <div className="left-panel__empty">Выберите элемент на холсте</div>
+      )}
+
+      {ungrouped.map((prop) => (
+        <div key={prop.name} className="left-panel__input-group">
+          <label className="left-panel__label">{prop.label}</label>
+          {renderPropertyEditor(prop)}
+        </div>
+      ))}
+
+      {collapseItems.length > 0 && (
+        <Collapse
+          ghost
+          items={collapseItems}
+          defaultActiveKey={collapseItems.map((c) => c.key)}
+        />
       )}
     </div>
   );

@@ -35,7 +35,7 @@ const useStore = create(
       projects: INITIAL_PROJECTS,
       activeProjectId: 'proj-1',
       activePageId: 'page-1',
-      selectedId: null,
+      selectedIds: [],
 
       createProject: (name, description) => {
         const now = Date.now();
@@ -256,14 +256,26 @@ const useStore = create(
           };
         }),
 
-      selectElement: (id) => set({ selectedId: id }),
+      selectElement: (id, addToSelection = false) =>
+        set((state) => {
+          if (id === null) return { selectedIds: [] };
+          if (addToSelection) {
+            const isAlready = state.selectedIds.includes(id);
+            return {
+              selectedIds: isAlready
+                ? state.selectedIds.filter((sid) => sid !== id)
+                : [...state.selectedIds, id],
+            };
+          }
+          return { selectedIds: [id] };
+        }),
 
       removeElement: (id) =>
         set((state) => {
           const page = getActivePage(state);
           if (!page) return state;
           return {
-            selectedId: state.selectedId === id ? null : state.selectedId,
+            selectedIds: state.selectedIds.filter((sid) => sid !== id),
             projects: {
               ...state.projects,
               [state.activeProjectId]: {
