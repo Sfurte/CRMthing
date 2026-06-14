@@ -34,51 +34,27 @@ const EditableHeader = ({ value, onSave, style }) => {
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-        inputRef.current?.select();
-      }, 10);
+      const timer = setTimeout(() => { inputRef.current?.focus(); inputRef.current?.select(); }, 10);
       return () => clearTimeout(timer);
     }
   }, [isEditing]);
-
   useEffect(() => { setEditValue(value); }, [value]);
 
-  const handleSave = () => {
-    if (editValue.trim()) onSave(editValue.trim());
-    setIsEditing(false);
-  };
+  const handleSave = () => { if (editValue.trim()) onSave(editValue.trim()); setIsEditing(false); };
 
   if (isEditing) {
     return (
-      <input
-        ref={inputRef}
-        type="text"
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
+      <input ref={inputRef} type="text" value={editValue} onChange={(e) => setEditValue(e.target.value)}
         onBlur={handleSave}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') { e.preventDefault(); handleSave(); }
-          if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); }
-          e.stopPropagation();
-          e.nativeEvent.stopImmediatePropagation();
-        }}
-        onPointerDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); }}
-        onClick={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); }}
-        style={{
-          width: '100%', border: '1px solid #1890ff', background: '#fff',
-          padding: '4px 8px', fontSize: 12, fontWeight: 500, outline: 'none',
-          borderRadius: 2, boxSizing: 'border-box', color: '#000', cursor: 'text', textAlign: 'left', ...style
-        }}
+        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); } e.stopPropagation(); }}
+        onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}
+        style={{ width: '100%', border: '1px solid #1890ff', background: '#fff', padding: '4px 8px', fontSize: 12, fontWeight: 500, outline: 'none', borderRadius: 2, boxSizing: 'border-box', color: '#000', cursor: 'text', textAlign: 'left', ...style }}
       />
     );
   }
-
   return (
-    <div
-      onDoubleClick={(e) => { e.stopPropagation(); e.nativeEvent?.stopImmediatePropagation?.(); setIsEditing(true); }}
-      style={{ cursor: 'text', padding: '4px 8px', minHeight: 20, fontWeight: 500, ...style }}
-    >
+    <div onDoubleClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
+      style={{ cursor: 'text', padding: '4px 8px', minHeight: 20, fontWeight: 500, ...style }}>
       {value ?? '—'}
     </div>
   );
@@ -91,51 +67,27 @@ const EditableCell = ({ value, onSave, style }) => {
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-        inputRef.current?.select();
-      }, 10);
+      const timer = setTimeout(() => { inputRef.current?.focus(); inputRef.current?.select(); }, 10);
       return () => clearTimeout(timer);
     }
   }, [isEditing]);
-
   useEffect(() => { setEditValue(value); }, [value]);
 
-  const handleSave = () => {
-    onSave(editValue);
-    setIsEditing(false);
-  };
+  const handleSave = () => { onSave(editValue); setIsEditing(false); };
 
   if (isEditing) {
     return (
-      <input
-        ref={inputRef}
-        type="text"
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
+      <input ref={inputRef} type="text" value={editValue} onChange={(e) => setEditValue(e.target.value)}
         onBlur={handleSave}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') { e.preventDefault(); handleSave(); }
-          if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); }
-          e.stopPropagation();
-          e.nativeEvent.stopImmediatePropagation();
-        }}
-        onPointerDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); }}
-        onClick={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); }}
-        style={{
-          width: '100%', border: '1px solid #1890ff', background: '#fff',
-          padding: '4px 8px', fontSize: 12, outline: 'none', borderRadius: 2,
-          boxSizing: 'border-box', color: '#000', cursor: 'text', ...style
-        }}
+        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); } e.stopPropagation(); }}
+        onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}
+        style={{ width: '100%', border: '1px solid #1890ff', background: '#fff', padding: '4px 8px', fontSize: 12, outline: 'none', borderRadius: 2, boxSizing: 'border-box', color: '#000', cursor: 'text', ...style }}
       />
     );
   }
-
   return (
-    <div
-      onDoubleClick={(e) => { e.stopPropagation(); e.nativeEvent?.stopImmediatePropagation?.(); setIsEditing(true); }}
-      style={{ cursor: 'text', padding: '4px 8px', minHeight: 20, ...style }}
-    >
+    <div onDoubleClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
+      style={{ cursor: 'text', padding: '4px 8px', minHeight: 20, ...style }}>
       {value ?? '—'}
     </div>
   );
@@ -143,22 +95,36 @@ const EditableCell = ({ value, onSave, style }) => {
 
 export default function TableElement({ element, isSelected }) {
   const updateElementProps = useStore((s) => s.updateElementProps);
-  
+  const wrapperRef = useRef(null);
+  const [rowHeight, setRowHeight] = useState(null);
+
   const props = element?.props || definition.defaultProps;
   const ts = textStyles(props);
 
   const rowCount = Math.min(20, Math.max(1, Number(props.rowCount) || 3));
   const columnCount = Math.min(10, Math.max(1, Number(props.columnCount) || 3));
-  
-  const headers = Array.from({ length: columnCount }, (_, i) => 
-    (props.headers?.[i] ?? `Колонка ${i + 1}`)
-  );
-  
+
+  const headers = Array.from({ length: columnCount }, (_, i) => props.headers?.[i] ?? `Колонка ${i + 1}`);
   const data = Array.from({ length: rowCount }, (_, r) =>
-    Array.from({ length: columnCount }, (_, c) =>
-      props.data?.[r]?.[c] ?? `Ячейка ${r + 1}.${c + 1}`
-    )
+    Array.from({ length: columnCount }, (_, c) => props.data?.[r]?.[c] ?? `Ячейка ${r + 1}.${c + 1}`)
   );
+
+  // Measure container height and calculate row height
+  useEffect(() => {
+    const el = wrapperRef.current?.parentElement;
+    if (!el) return;
+    const measure = () => {
+      const h = el.offsetHeight;
+      // header ~36px, borders ~2px, padding ~8px
+      const headerH = 40;
+      const rowH = Math.max(20, Math.floor((h - headerH - 10) / rowCount));
+      setRowHeight(rowH);
+    };
+    measure();
+    const obs = new ResizeObserver(measure);
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [rowCount]);
 
   const handleHeaderSave = (colIndex, newValue) => {
     const newHeaders = [...headers];
@@ -174,22 +140,12 @@ export default function TableElement({ element, isSelected }) {
   };
 
   const columns = headers.map((title, colIndex) => ({
-    title: (
-      <EditableHeader 
-        value={title} 
-        onSave={(val) => handleHeaderSave(colIndex, val)} 
-        style={ts}
-      />
-    ),
+    title: <EditableHeader value={title} onSave={(val) => handleHeaderSave(colIndex, val)} style={ts} />,
     dataIndex: `col_${colIndex}`,
     key: `col_${colIndex}`,
     width: 120,
     render: (text, record, rowIndex) => (
-      <EditableCell 
-        value={text} 
-        onSave={(val) => handleCellSave(rowIndex, colIndex, val)} 
-        style={ts}
-      />
+      <EditableCell value={text} onSave={(val) => handleCellSave(rowIndex, colIndex, val)} style={ts} />
     ),
   }));
 
@@ -199,13 +155,16 @@ export default function TableElement({ element, isSelected }) {
   }));
 
   return (
-    <div className="element-table__wrapper">
+    <div className="element-table__wrapper" ref={wrapperRef}>
       <Table
         columns={columns}
         dataSource={dataSource}
         size="small"
         pagination={false}
         bordered
+        onRow={() => ({
+          style: rowHeight ? { height: rowHeight } : undefined,
+        })}
       />
     </div>
   );

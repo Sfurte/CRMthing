@@ -8,6 +8,7 @@ import GridElement, { definition as gridDef } from './grid';
 import ImageElement, { definition as imageDef } from './image';
 import ChartElement, { definition as chartDef } from './chart';
 import RadioElement, { definition as radioDef } from './radio';
+import CheckboxElement, { definition as checkboxDef } from './checkbox';
 
 const withSize = (def, w, h) => ({
   ...def,
@@ -26,6 +27,7 @@ export const ELEMENTS = {
   Image: ImageElement,
   Chart: ChartElement,
   Radio: RadioElement,
+  Checkbox: CheckboxElement,
 };
 
 export const ELEMENT_DEFINITIONS = [
@@ -39,4 +41,5 @@ export const ELEMENT_DEFINITIONS = [
   withSize(imageDef, 300, 200),
   withSize(chartDef, 400, 300),
   withSize(radioDef, 400, 300),
+  withSize(checkboxDef, 250, 200),
 ];

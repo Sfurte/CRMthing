@@ -1,10 +1,11 @@
-﻿import ButtonElement, { definition as buttonDef } from './button';
+import ButtonElement, { definition as buttonDef } from './button';
 import CardElement, { definition as cardDef } from './card';
 import InputElement, { definition as inputDef } from './input';
 import TextElement, { definition as textDef } from './text';
 import TableElement, { definition as tableDef } from './table';
 import GridElement, { definition as gridDef } from './grid';
 import RadioElement, { definition as radioDef } from './radio';
+import CheckboxElement, { definition as checkboxDef } from './checkbox';
 
 // Карта компонентов для рендеринга на доске
 export const ELEMENTS = {
@@ -15,6 +16,7 @@ export const ELEMENTS = {
   Table: TableElement,
   Grid: GridElement,
   Radio: RadioElement,
+  Checkbox: CheckboxElement,
 };
 
 // Список определений для меню (сайдбара)
@@ -26,6 +28,7 @@ export const ELEMENT_DEFINITIONS = [
   tableDef,
   gridDef,
   radioDef,
+  checkboxDef,
 ];
 
 // Для совместимости со старым кодом
