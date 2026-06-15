@@ -36,6 +36,7 @@ const useStore = create(
       activeProjectId: 'proj-1',
       activePageId: 'page-1',
       selectedIds: [],
+      clipboard: null,
 
       createProject: (name, description) => {
         const now = Date.now();
@@ -153,7 +154,7 @@ const useStore = create(
           };
         }),
 
-      addElement: (type, x, y) =>
+      addElement: (type, x, y, overrides = {}) =>
         set((state) => {
           const page = getActivePage(state);
           if (!page) return state;
@@ -165,9 +166,9 @@ const useStore = create(
             x, 
             y, 
             zIndex: ++zCounter,
-            width: def?.defaultWidth || 200,
-            height: def?.defaultHeight || 100,
-            props: defaultProps,
+            width: overrides.width ?? def?.defaultWidth ?? 200,
+            height: overrides.height ?? def?.defaultHeight ?? 100,
+            props: overrides.props ? { ...defaultProps, ...overrides.props } : defaultProps,
           };
           return {
             projects: {
@@ -255,6 +256,8 @@ const useStore = create(
             },
           };
         }),
+
+      setClipboard: (data) => set({ clipboard: data }),
 
       selectElement: (id, addToSelection = false) =>
         set((state) => {

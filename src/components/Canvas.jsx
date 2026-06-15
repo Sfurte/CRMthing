@@ -1,5 +1,6 @@
 import { useDroppable } from '@dnd-kit/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { SnippetsOutlined } from '@ant-design/icons';
 import useStore, { selectActivePageElements, selectActivePage } from '../store';
 import DraggableElement from './DraggableElement';
 import useCanvasTransform from '../hooks/useCanvasTransform';
@@ -35,6 +36,7 @@ export default function Canvas({ canvasRectRef, onElementContextMenu, contextTar
 
   const selBox = useRef({ active: false, startX: 0, startY: 0, curX: 0, curY: 0 });
   const [selRect, setSelRect] = useState(null);
+  const [pasteMenu, setPasteMenu] = useState(null);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -57,11 +59,14 @@ export default function Canvas({ canvasRectRef, onElementContextMenu, contextTar
 
     const onPointerDown = (e) => {
       panDown(e);
-      if (e.button === 0 && !spacePressed.current && !e.target.closest('.element') && !e.target.closest('[data-context-action]')) {
+      if (e.button === 0 && !spacePressed.current && !e.target.closest('.element') && !e.target.closest('[data-context-action]') && !e.target.closest('.canvas-paste-menu')) {
+        setPasteMenu(null);
         const rect = node.getBoundingClientRect();
         const t = transformRef.current;
         const start = toCanvasCoords(e.clientX, e.clientY, rect, t);
         selBox.current = { active: true, startX: start.x, startY: start.y, curX: start.x, curY: start.y };
+      } else if (!e.target.closest('.canvas-paste-menu')) {
+        setPasteMenu(null);
       }
     };
 
@@ -146,11 +151,24 @@ export default function Canvas({ canvasRectRef, onElementContextMenu, contextTar
     };
   }, [selRect]);
 
+  const handlePaste = useCallback(() => {
+    const clip = useStore.getState().clipboard;
+    if (!clip) return;
+    const rect = canvasRectRef.current;
+    const t = transformRef.current;
+    if (rect && t && pasteMenu) {
+      const { x, y } = toCanvasCoords(pasteMenu.x, pasteMenu.y, rect, t);
+      useStore.getState().addElement(clip.type, x, y, clip);
+    }
+    setPasteMenu(null);
+  }, [pasteMenu]);
+
   return (
     <div
       ref={mergedRef}
       className={'canvas' + (isPanning ? ' canvas--panning' : ' canvas--default')}
       onClick={() => {
+        setPasteMenu(null);
         if (!selBox.current.active && !selBox.current.didDrag) onCloseContext?.();
         selBox.current.didDrag = false;
       }}
@@ -158,6 +176,9 @@ export default function Canvas({ canvasRectRef, onElementContextMenu, contextTar
         if (contextTargetId) {
           e.preventDefault();
           onCloseContext?.();
+        } else if (useStore.getState().clipboard) {
+          e.preventDefault();
+          setPasteMenu({ x: e.clientX, y: e.clientY });
         }
       }}
     >
@@ -174,6 +195,42 @@ export default function Canvas({ canvasRectRef, onElementContextMenu, contextTar
           )}
         </div>
       </div>
+
+      {pasteMenu && (
+        <div
+          className="canvas-paste-menu"
+          data-context-action
+          style={{
+            position: 'fixed',
+            left: pasteMenu.x,
+            top: pasteMenu.y,
+            zIndex: 9999,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: '8px',
+            gap: 17,
+            background: '#F5F5F5',
+            borderRadius: 8,
+            boxSizing: 'border-box',
+            transform: 'translate(-50%, -100%)',
+            marginTop: -8,
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <button
+            className="element__context-btn"
+            style={{
+              width: 18, height: 18, padding: 0, border: 'none', background: 'none',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#171717',
+            }}
+            onClick={(e) => { e.stopPropagation(); handlePaste(); }}
+          >
+            <SnippetsOutlined />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

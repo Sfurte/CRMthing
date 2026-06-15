@@ -32,9 +32,9 @@
   padding: var(--space-2);
   gap: 17px;
   margin-bottom: var(--space-2);
-  z-index: var(--z-context-bar);
-  width: 104px;
+  z-index: 9998;
   height: 34px;
+  width: auto;
   background: var(--bg-hover);
   border-radius: var(--radius-md);
   box-sizing: border-box;

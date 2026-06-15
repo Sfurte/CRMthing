@@ -30,7 +30,6 @@ function EditorContent() {
 
   const transformRef = useTransformRef();
   const canvasRectRef = useRef(null);
-  const clipboardRef = useRef(null);
   const mousePosRef = useRef({ x: 0, y: 0 });
 
   const [contextTargetId, setContextTargetId] = useState(null);
@@ -66,23 +65,24 @@ function EditorContent() {
         selectElement(null);
         setContextTargetId(null);
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+      if ((e.ctrlKey || e.metaKey) && e.code === 'KeyC') {
         const state = useStore.getState();
         const page = state.projects[state.activeProjectId]?.pages[state.activePageId];
         const el = page?.elements.find((el) => el.id === state.selectedIds[0]);
         if (el) {
-          clipboardRef.current = {
+          const data = {
             type: el.type,
             width: el.width,
             height: el.height,
             props: el.props ? { ...el.props } : {},
           };
+          useStore.getState().setClipboard(data);
         }
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
-        if (!clipboardRef.current) return;
+      if ((e.ctrlKey || e.metaKey) && e.code === 'KeyV') {
+        const data = useStore.getState().clipboard;
+        if (!data) return;
         e.preventDefault();
-        const data = clipboardRef.current;
         const canvasRect = canvasRectRef.current;
         const transform = transformRef.current;
         let x = 100, y = 100;
