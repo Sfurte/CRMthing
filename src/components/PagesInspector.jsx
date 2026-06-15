@@ -2,7 +2,7 @@
  * PagesInspector - a minimizable vertical panel on the right side
  * showing all pages of the current project and allowing switching.
  */
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import useStore from '../store';
 import './PagesInspector.css';
 
@@ -21,6 +21,50 @@ export default function PagesInspector() {
   const [collapsed, setCollapsed] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
+  // Renaming state
+  const [renamingId, setRenamingId] = useState(null);
+  const [editName, setEditName] = useState('');
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (renamingId && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [renamingId]);
+
+  const startRename = (page) => {
+    setRenamingId(page.id);
+    setEditName(page.name);
+  };
+
+  const commitRename = () => {
+    const name = editName.trim();
+    if (name && renamingId) {
+      useStore.setState((state) => {
+        const p = state.projects[state.activeProjectId];
+        if (!p || !p.pages[renamingId]) return state;
+        return {
+          projects: {
+            ...state.projects,
+            [state.activeProjectId]: {
+              ...p,
+              pages: {
+                ...p.pages,
+                [renamingId]: { ...p.pages[renamingId], name },
+              },
+            },
+          },
+        };
+      });
+    }
+    setRenamingId(null);
+  };
+
+  const cancelRename = () => {
+    setRenamingId(null);
+  };
+
   if (collapsed) {
     return (
       <div className="inspector--collapsed">
@@ -35,7 +79,6 @@ export default function PagesInspector() {
 
   return (
     <div className="inspector">
-      {/* Header: title + collapse */}
       <div className="inspector__header">
         <span className="inspector__title">Страницы</span>
         <div className="inspector__toggle" onClick={() => setCollapsed(true)}>
@@ -45,22 +88,50 @@ export default function PagesInspector() {
         </div>
       </div>
 
-      {/* Page list */}
       <div className="inspector__list">
         {pages.map((page) => {
           const isActive = page.id === activePageId;
+          const isRenaming = renamingId === page.id;
           return (
             <div
               key={page.id}
               className={'inspector__item' + (isActive ? ' inspector__item--active' : '')}
-              onClick={() => setActivePage(page.id)}
+              onClick={() => { if (!isRenaming) setActivePage(page.id); }}
             >
               <svg viewBox='0 0 24 24' fill='none'>
                 <path d='M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z' stroke={isActive ? 'var(--accent)' : 'currentColor'} strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'/>
                 <path d='M14 2V8H20' stroke={isActive ? 'var(--accent)' : 'currentColor'} strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'/>
               </svg>
-              <span className="inspector__item-name">{page.name}</span>
-              {pageCount > 1 && (
+              {isRenaming ? (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  onBlur={commitRename}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    if (e.key === 'Enter') { e.preventDefault(); commitRename(); }
+                    if (e.key === 'Escape') { e.preventDefault(); cancelRename(); }
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  style={{
+                    flex: 1, border: '1px solid var(--accent)', borderRadius: 4,
+                    padding: '2px 6px', fontSize: 14, fontFamily: 'var(--font-family)',
+                    background: 'var(--bg-surface)', color: 'var(--text-primary)',
+                    outline: 'none', minWidth: 0,
+                  }}
+                />
+              ) : (
+                <span
+                  className="inspector__item-name"
+                  onDoubleClick={(e) => { e.stopPropagation(); startRename(page); }}
+                >
+                  {page.name}
+                </span>
+              )}
+              {pageCount > 1 && !isRenaming && (
                 <button
                   className="inspector__delete-btn"
                   onClick={(e) => {
@@ -78,7 +149,6 @@ export default function PagesInspector() {
         })}
       </div>
 
-      {/* Add page button */}
       <button className="inspector__add-btn" onClick={() => addPage()}>
         <svg viewBox='0 0 24 24' fill='none'>
           <path d='M12 5V19' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'/>
@@ -87,7 +157,6 @@ export default function PagesInspector() {
         <span>Добавить страницу</span>
       </button>
 
-      {/* Delete confirmation modal */}
       {deleteTarget && (
         <div className="inspector__modal-overlay" onClick={() => setDeleteTarget(null)}>
           <div className="inspector__modal" onClick={(e) => e.stopPropagation()}>
@@ -96,21 +165,8 @@ export default function PagesInspector() {
               Действительно хотите удалить страницу &laquo;{deleteTarget.name}&raquo;?
             </p>
             <div className="inspector__modal-actions">
-              <button
-                className="inspector__modal-btn inspector__modal-btn--cancel"
-                onClick={() => setDeleteTarget(null)}
-              >
-                Отмена
-              </button>
-              <button
-                className="inspector__modal-btn inspector__modal-btn--danger"
-                onClick={() => {
-                  deletePage(deleteTarget.id);
-                  setDeleteTarget(null);
-                }}
-              >
-                Удалить
-              </button>
+              <button className="inspector__modal-btn inspector__modal-btn--cancel" onClick={() => setDeleteTarget(null)}>Отмена</button>
+              <button className="inspector__modal-btn inspector__modal-btn--danger" onClick={() => { deletePage(deleteTarget.id); setDeleteTarget(null); }}>Удалить</button>
             </div>
           </div>
         </div>

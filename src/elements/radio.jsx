@@ -16,7 +16,7 @@ export const definition = {
       { label: 'Вариант 3', value: 'option3' },
     ],
     defaultValue: 'option1',
-    direction: 'horizontal',
+    direction: 'vertical',
     bgColor: 'transparent',
     ...textBlock.defaultProps,
   },
@@ -34,53 +34,27 @@ const EditableLabel = ({ value, onSave, style: tsStyle }) => {
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-        inputRef.current?.select();
-      }, 10);
+      const timer = setTimeout(() => { inputRef.current?.focus(); inputRef.current?.select(); }, 10);
       return () => clearTimeout(timer);
     }
   }, [isEditing]);
-
   useEffect(() => { setEditValue(value); }, [value]);
 
-  const handleSave = () => {
-    if (editValue.trim()) onSave(editValue.trim());
-    setIsEditing(false);
-  };
-
-  const stopEvents = (e) => {
-    e.stopPropagation();
-    e.nativeEvent?.stopImmediatePropagation?.();
-  };
+  const handleSave = () => { if (editValue.trim()) onSave(editValue.trim()); setIsEditing(false); };
+  const stopEvents = (e) => { e.stopPropagation(); e.nativeEvent?.stopImmediatePropagation?.(); };
 
   if (isEditing) {
     return (
-      <input
-        ref={inputRef}
-        type="text"
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
+      <input ref={inputRef} type="text" value={editValue} onChange={(e) => setEditValue(e.target.value)}
         onBlur={handleSave}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') { e.preventDefault(); handleSave(); }
-          if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); }
-          stopEvents(e);
-        }}
-        onPointerDown={stopEvents}
-        onClick={stopEvents}
-        className="element-radio__label-input"
-        style={tsStyle}
-      />
+        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); } stopEvents(e); }}
+        onPointerDown={stopEvents} onClick={stopEvents}
+        className="element-radio__label-input" style={tsStyle} />
     );
   }
-
   return (
-    <span
-      onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
-      className="element-radio__label"
-      style={tsStyle}
-    >
+    <span onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
+      className="element-radio__label" style={tsStyle}>
       {value}
     </span>
   );
@@ -91,39 +65,21 @@ export default function RadioElement({ element, isSelected }) {
   const props = element?.props || definition.defaultProps;
   const ts = textStyles(props);
 
-  const {
-    options = definition.defaultProps.options,
-    defaultValue = 'option1',
-    direction = 'horizontal',
-    bgColor = 'transparent',
-  } = props;
-
+  const { options = definition.defaultProps.options, defaultValue = 'option1', direction = 'vertical', bgColor = 'transparent' } = props;
   const [selectedValue, setSelectedValue] = useState(defaultValue);
+  useEffect(() => { setSelectedValue(defaultValue); }, [defaultValue]);
 
-  useEffect(() => {
-    setSelectedValue(defaultValue);
-  }, [defaultValue]);
-
-  const handleChange = (e) => {
-    const newValue = e.target.value;
-    setSelectedValue(newValue);
-    updateElementProps(element.id, { defaultValue: newValue });
-  };
+  const handleChange = (e) => { setSelectedValue(e.target.value); updateElementProps(element.id, { defaultValue: e.target.value }); };
 
   const addOption = () => {
-    const newOptions = [...options, { 
-      label: `Вариант ${options.length + 1}`, 
-      value: `option${Date.now()}` 
-    }];
-    updateElementProps(element.id, { options: newOptions });
+    updateElementProps(element.id, {
+      options: [...options, { label: `Вариант ${options.length + 1}`, value: `option${Date.now()}` }]
+    });
   };
-
   const removeOption = (index) => {
     if (options.length <= 1) return;
-    const newOptions = options.filter((_, i) => i !== index);
-    updateElementProps(element.id, { options: newOptions });
+    updateElementProps(element.id, { options: options.filter((_, i) => i !== index) });
   };
-
   const handleLabelSave = (index, newLabel) => {
     const newOptions = [...options];
     newOptions[index] = { ...newOptions[index], label: newLabel };
@@ -131,34 +87,17 @@ export default function RadioElement({ element, isSelected }) {
   };
 
   return (
-    <div className="element-radio" style={{ backgroundColor: bgColor || 'transparent', pointerEvents: 'auto' }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <Radio.Group
-        onChange={handleChange}
-        value={selectedValue}
-        direction={direction}
-        className={'element-radio__group element-radio__group--' + direction}
-      >
+    <div className="element-radio" style={{ backgroundColor: bgColor || 'transparent', pointerEvents: 'auto' }} onClick={(e) => e.stopPropagation()}>
+      <Radio.Group onChange={handleChange} value={selectedValue} direction={direction}
+        className={'element-radio__group element-radio__group--' + direction}>
         {options.map((option, index) => (
           <div key={option.value} className="element-radio__item">
             <Radio value={option.value} />
-            <EditableLabel
-              value={option.label}
-              onSave={(val) => handleLabelSave(index, val)}
-              style={ts}
-            />
+            <EditableLabel value={option.label} onSave={(val) => handleLabelSave(index, val)} style={ts} />
             {isSelected && options.length > 1 && (
-              <button
-                className="element-radio__remove-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeOption(index);
-                }}
-                title="Удалить вариант"
-              >
-                ×
-              </button>
+              <button className="element-radio__remove-btn"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); removeOption(index); }} title="Удалить вариант">×</button>
             )}
           </div>
         ))}
@@ -166,10 +105,8 @@ export default function RadioElement({ element, isSelected }) {
 
       {isSelected && (
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            addOption();
-          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); addOption(); }}
           style={{
             marginTop: 8, padding: '4px 12px', border: '1px dashed var(--accent)',
             borderRadius: 4, background: 'transparent', color: 'var(--accent)',

@@ -33,53 +33,27 @@ const EditableLabel = ({ value, onSave, style: tsStyle }) => {
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-        inputRef.current?.select();
-      }, 10);
+      const timer = setTimeout(() => { inputRef.current?.focus(); inputRef.current?.select(); }, 10);
       return () => clearTimeout(timer);
     }
   }, [isEditing]);
-
   useEffect(() => { setEditValue(value); }, [value]);
 
-  const handleSave = () => {
-    if (editValue.trim()) onSave(editValue.trim());
-    setIsEditing(false);
-  };
-
-  const stopEvents = (e) => {
-    e.stopPropagation();
-    e.nativeEvent?.stopImmediatePropagation?.();
-  };
+  const handleSave = () => { if (editValue.trim()) onSave(editValue.trim()); setIsEditing(false); };
+  const stopEvents = (e) => { e.stopPropagation(); e.nativeEvent?.stopImmediatePropagation?.(); };
 
   if (isEditing) {
     return (
-      <input
-        ref={inputRef}
-        type="text"
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
+      <input ref={inputRef} type="text" value={editValue} onChange={(e) => setEditValue(e.target.value)}
         onBlur={handleSave}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') { e.preventDefault(); handleSave(); }
-          if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); }
-          stopEvents(e);
-        }}
-        onPointerDown={stopEvents}
-        onClick={stopEvents}
-        className="element-checkbox__label-input"
-        style={tsStyle}
-      />
+        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); } stopEvents(e); }}
+        onPointerDown={stopEvents} onClick={stopEvents}
+        className="element-checkbox__label-input" style={tsStyle} />
     );
   }
-
   return (
-    <span
-      onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
-      className="element-checkbox__label"
-      style={tsStyle}
-    >
+    <span onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
+      className="element-checkbox__label" style={tsStyle}>
       {value}
     </span>
   );
@@ -90,34 +64,23 @@ export default function CheckboxElement({ element, isSelected }) {
   const props = element?.props || definition.defaultProps;
   const ts = textStyles(props);
 
-  const {
-    options = definition.defaultProps.options,
-    direction = 'vertical',
-    bgColor = 'transparent',
-  } = props;
+  const { options = definition.defaultProps.options, direction = 'vertical', bgColor = 'transparent' } = props;
 
   const handleChange = (index) => (e) => {
-    const newOptions = options.map((opt, i) =>
-      i === index ? { ...opt, checked: e.target.checked } : opt
-    );
-    updateElementProps(element.id, { options: newOptions });
+    updateElementProps(element.id, {
+      options: options.map((opt, i) => i === index ? { ...opt, checked: e.target.checked } : opt)
+    });
   };
 
   const addOption = () => {
-    const newOptions = [...options, {
-      label: `Опция ${options.length + 1}`,
-      value: `opt${Date.now()}`,
-      checked: false,
-    }];
-    updateElementProps(element.id, { options: newOptions });
+    updateElementProps(element.id, {
+      options: [...options, { label: `Опция ${options.length + 1}`, value: `opt${Date.now()}`, checked: false }]
+    });
   };
-
   const removeOption = (index) => {
     if (options.length <= 1) return;
-    const newOptions = options.filter((_, i) => i !== index);
-    updateElementProps(element.id, { options: newOptions });
+    updateElementProps(element.id, { options: options.filter((_, i) => i !== index) });
   };
-
   const handleLabelSave = (index, newLabel) => {
     const newOptions = [...options];
     newOptions[index] = { ...newOptions[index], label: newLabel };
@@ -125,32 +88,16 @@ export default function CheckboxElement({ element, isSelected }) {
   };
 
   return (
-    <div className="element-checkbox" style={{ backgroundColor: bgColor || 'transparent', pointerEvents: 'auto' }}
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div className="element-checkbox" style={{ backgroundColor: bgColor || 'transparent', pointerEvents: 'auto' }} onClick={(e) => e.stopPropagation()}>
       <div className={'element-checkbox__group element-checkbox__group--' + direction}>
         {options.map((option, index) => (
           <div key={option.value} className="element-checkbox__item">
-            <Checkbox
-              checked={option.checked}
-              onChange={handleChange(index)}
-            />
-            <EditableLabel
-              value={option.label}
-              onSave={(val) => handleLabelSave(index, val)}
-              style={ts}
-            />
+            <Checkbox checked={option.checked} onChange={handleChange(index)} />
+            <EditableLabel value={option.label} onSave={(val) => handleLabelSave(index, val)} style={ts} />
             {isSelected && options.length > 1 && (
-              <button
-                className="element-checkbox__remove-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeOption(index);
-                }}
-                title="Удалить опцию"
-              >
-                ×
-              </button>
+              <button className="element-checkbox__remove-btn"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); removeOption(index); }} title="Удалить опцию">×</button>
             )}
           </div>
         ))}
@@ -158,10 +105,8 @@ export default function CheckboxElement({ element, isSelected }) {
 
       {isSelected && (
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            addOption();
-          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); addOption(); }}
           style={{
             marginTop: 8, padding: '4px 12px', border: '1px dashed var(--accent)',
             borderRadius: 4, background: 'transparent', color: 'var(--accent)',

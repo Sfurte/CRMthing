@@ -13,6 +13,8 @@ const typeToCategory = {
   Chart: 'data',
   Button: 'form',
   Input: 'form',
+  Radio: 'form',
+  Checkbox: 'form',
   Grid: 'structure',
   Card: 'structure',
   Container: 'structure',
