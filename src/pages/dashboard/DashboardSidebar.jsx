@@ -1,3 +1,5 @@
+import { UserOutlined } from '@ant-design/icons';
+
 const styles = {
   sidebar: {
     width: 280,
@@ -9,18 +11,29 @@ const styles = {
     flexDirection: 'column',
     height: '100%',
   },
+  profileSection: {
+    marginBottom: 30,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   avatar: {
     width: 48,
     height: 48,
     backgroundColor: '#3B82F6',
-    borderRadius: 12,
+    borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     color: '#fff',
-    fontSize: 20,
-    fontWeight: 700,
-    marginBottom: 12,
+    fontSize: 24,
+    flexShrink: 0,
+  },
+  profileInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   name: {
     fontWeight: 700,
@@ -32,9 +45,6 @@ const styles = {
     fontSize: 13,
     color: '#697386',
     fontFamily: 'Inter, sans-serif',
-  },
-  profileSection: {
-    marginBottom: 30,
   },
   menuItem: {
     padding: '12px',
@@ -65,9 +75,13 @@ export default function DashboardSidebar() {
   return (
     <div style={styles.sidebar}>
       <div style={styles.profileSection}>
-        <div style={styles.avatar}>JD</div>
-        <div style={styles.name}>John Doe</div>
-        <div style={styles.email}>john@example.com</div>
+        <div style={styles.avatar}>
+          <UserOutlined />
+        </div>
+        <div style={styles.profileInfo}>
+          <div style={styles.name}>John Doe</div>
+          <div style={styles.email}>john@example.com</div>
+        </div>
       </div>
 
       <div style={styles.menuSection}>
@@ -76,8 +90,6 @@ export default function DashboardSidebar() {
         <div style={styles.menuItem}>📄 Страницы</div>
         <div style={styles.menuItem}>⚙️ Настройки</div>
       </div>
-
-      
     </div>
   );
 }

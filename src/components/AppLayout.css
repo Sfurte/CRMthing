@@ -15,21 +15,30 @@
 }
 
 .app-layout__profile {
-  padding: var(--space-6) var(--space-5) var(--space-5);
+  padding: 44px var(--space-5) 28px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
 }
 
 .app-layout__avatar {
   width: 48px;
   height: 48px;
   background-color: var(--accent);
-  border-radius: var(--radius-lg);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-inverse);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--space-3);
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.app-layout__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .app-layout__name {

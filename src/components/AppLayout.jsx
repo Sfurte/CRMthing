@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Menu, Typography } from 'antd';
-import { FolderOutlined, SettingOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { FolderOutlined, SettingOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { useTranslation } from '../i18n';
 import './AppLayout.css';
 
@@ -33,9 +33,11 @@ export default function AppLayout() {
         className="app-layout__sider"
       >
         <div className="app-layout__profile">
-          <div className="app-layout__avatar">JD</div>
-          <Text strong className="app-layout__name">John Doe</Text>
-          <Text type="secondary" className="app-layout__email">john@example.com</Text>
+          <div className="app-layout__avatar"><UserOutlined /></div>
+          <div className="app-layout__info">
+            <Text strong className="app-layout__name">John Doe</Text>
+            <Text type="secondary" className="app-layout__email">john@example.com</Text>
+          </div>
         </div>
 
         <Menu
