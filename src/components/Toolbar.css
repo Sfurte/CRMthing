@@ -1,0 +1,20 @@
+/* ═══════════════════════════════════════════
+   Toolbar — Horizontal bar between Header and Canvas
+   ═══════════════════════════════════════════ */
+
+.toolbar {
+  height: var(--toolbar-height);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px var(--space-5);
+  gap: var(--space-2);
+}
+
+.toolbar__divider {
+  width: 0;
+  height: 18px;
+  border-left: 1px solid #ACACAC;
+}

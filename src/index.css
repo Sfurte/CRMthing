@@ -1,0 +1,317 @@
+/* ═══════════════════════════════════════════════
+   CRMthing — Global Styles
+   Импортируется из main.jsx
+   ═══════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'antd/dist/reset.css';
+@import './styles/variables.css';
+@import './styles/reset.css';
+
+/* ── Canvas element styles ── */
+
+.canvas-element {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+  transition: outline 0.2s ease;
+}
+
+.canvas-element:hover {
+  outline: 2px dashed var(--accent);
+  outline-offset: 2px;
+}
+
+.canvas-element.selected {
+  z-index: var(--z-selected);
+}
+
+.drag-overlay {
+  opacity: 0.6;
+  background: var(--accent-light);
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+/* ── Ant Design overrides for canvas elements ── */
+
+.canvas-element .ant-btn,
+.canvas-element .ant-input,
+.canvas-element .ant-card,
+.canvas-element .ant-table {
+  pointer-events: auto;
+}
+
+.canvas-element.selected .ant-input input,
+.canvas-element.selected .ant-input-affix-wrapper,
+.canvas-element.selected .ant-btn,
+.canvas-element.selected .ant-card {
+  pointer-events: none;
+}
+
+.canvas-element .ant-typography {
+  margin: 0;
+}
+
+.canvas-element .ant-table {
+  background: var(--bg-surface);
+}
+
+.canvas-element .ant-table-cell {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.canvas-element.selected .ant-table {
+  pointer-events: none;
+}
+
+.canvas-element .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-size: var(--font-size-xs);
+  padding: var(--space-2) var(--space-3);
+}
+
+.canvas-element .ant-table-tbody > tr > td {
+  font-size: var(--font-size-xs);
+  padding: var(--space-1) var(--space-3);
+}
+
+.canvas-element .ant-card {
+  margin: 0;
+}
+
+.canvas-element .ant-card-head {
+  min-height: 36px;
+  padding: 0 var(--space-3);
+}
+
+.canvas-element .ant-card-head-title {
+  font-size: 13px;
+  padding: var(--space-2) 0;
+}
+
+.canvas-element .ant-card-body {
+  padding: var(--space-3);
+  font-size: 13px;
+}
+
+.input-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: #374151;
+  margin-bottom: var(--space-1);
+  user-select: none;
+}
+
+/* ── Ant Charts overrides ── */
+
+.ant-charts-container {
+  background: #fff;
+}
+
+.ant-charts-container .ant-chart-tooltip {
+  font-family: var(--font-family);
+}
+
+.canvas-element .ant-chart {
+  overflow: visible;
+}
+
+.canvas-element.selected .ant-charts-container {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+/* ═══════════════════════════════════════════
+   Dark Theme — Keep Canvas Components White
+   ═══════════════════════════════════════════ */
+
+/* Компоненты на холсте остаются белыми в тёмной теме */
+[data-theme="dark"] .canvas-element {
+  background: #FFFFFF;
+  color: #202020;
+}
+
+/* Все Ant Design компоненты на холсте — белые */
+[data-theme="dark"] .canvas-element .ant-btn,
+[data-theme="dark"] .canvas-element .ant-card,
+[data-theme="dark"] .canvas-element .ant-table,
+[data-theme="dark"] .canvas-element .ant-input,
+[data-theme="dark"] .canvas-element .ant-input-affix-wrapper,
+[data-theme="dark"] .canvas-element .ant-radio-wrapper,
+[data-theme="dark"] .canvas-element .ant-checkbox-wrapper,
+[data-theme="dark"] .canvas-element .ant-picker,
+[data-theme="dark"] .canvas-element .ant-select,
+[data-theme="dark"] .canvas-element .ant-modal-content,
+[data-theme="dark"] .canvas-element .ant-dropdown-menu {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #E0E0E0 !important;
+}
+
+/* Таблицы — белые ячейки */
+[data-theme="dark"] .canvas-element .ant-table-thead > tr > th {
+  background: #FAFAFA !important;
+  color: #202020 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-table-tbody > tr > td {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #E0E0E0 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-table-tbody > tr:hover > td {
+  background: #F5F5F5 !important;
+}
+
+/* Карточки — белые */
+[data-theme="dark"] .canvas-element .ant-card {
+  background: #FFFFFF !important;
+  border-color: #E0E0E0 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-card-head {
+  background: #FAFAFA !important;
+  color: #202020 !important;
+  border-bottom-color: #E0E0E0 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-card-body {
+  color: #202020 !important;
+  background: #FFFFFF !important;
+}
+
+/* Кнопки */
+[data-theme="dark"] .canvas-element .ant-btn-primary {
+  background: #3B82F6 !important;
+  color: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-btn-default {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #D4D4D4 !important;
+}
+
+/* Инпуты — белые */
+[data-theme="dark"] .canvas-element .ant-input {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-input::placeholder {
+  color: #999999 !important;
+}
+
+/* Радио и чекбоксы — делаем видимыми */
+[data-theme="dark"] .canvas-element .ant-radio-wrapper,
+[data-theme="dark"] .canvas-element .ant-checkbox-wrapper {
+  color: #202020 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-radio-inner {
+  background: #FFFFFF !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-radio-checked .ant-radio-inner {
+  background: #3B82F6 !important;
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-checkbox-inner {
+  background: #FFFFFF !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .canvas-element .ant-checkbox-checked .ant-checkbox-inner {
+  background: #3B82F6 !important;
+  border-color: #3B82F6 !important;
+}
+
+/* График — белый фон */
+[data-theme="dark"] .canvas-element .ant-charts-container,
+[data-theme="dark"] .canvas-element .ant-chart {
+  background: #FFFFFF !important;
+}
+
+[data-theme="dark"] .canvas-element .g2-tooltip {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #E0E0E0 !important;
+}
+
+/* Контейнер — белый фон */
+[data-theme="dark"] .canvas-element .element-container,
+[data-theme="dark"] .canvas-element [class*="container"] {
+  background: #FFFFFF !important;
+}
+
+/* Изображение — белый фон для placeholder */
+[data-theme="dark"] .canvas-element .element-image,
+[data-theme="dark"] .canvas-element [class*="image"] {
+  background: #FFFFFF !important;
+}
+
+/* Текст — белый фон */
+[data-theme="dark"] .canvas-element .element-text,
+[data-theme="dark"] .canvas-element [class*="text"] {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+}
+/* График — белый фон для SVG */
+[data-theme="dark"] .canvas-element .ant-charts-container,
+[data-theme="dark"] .canvas-element .ant-chart,
+[data-theme="dark"] .canvas-element svg {
+  background: #FFFFFF !important;
+}
+
+[data-theme="dark"] .canvas-element svg rect,
+[data-theme="dark"] .canvas-element svg path {
+  /* Не трогаем цвета столбцов/линий, только фон */
+}
+
+/* Фон графика через CSS-переменную */
+[data-theme="dark"] .canvas-element .g2-tooltip {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #E0E0E0 !important;
+}
+/* Игнорировать drag для элементов с data-no-dnd */
+[data-no-dnd="true"],
+[data-no-dnd="true"] * {
+  pointer-events: auto !important;
+  user-select: auto !important;
+}
+
+[data-no-dnd="true"] button,
+[data-no-dnd="true"] input {
+  cursor: pointer !important;
+}
+
+[data-no-dnd="true"] input {
+  cursor: text !important;
+}
+
+/* Разрешаем клики по Radio и Checkbox даже когда элемент выбран */
+.canvas-element.selected .element-radio,
+.canvas-element.selected .element-checkbox {
+  pointer-events: auto !important;
+}
+
+.canvas-element.selected .ant-radio-wrapper,
+.canvas-element.selected .ant-checkbox-wrapper {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+.canvas-element.selected .ant-radio,
+.canvas-element.selected .ant-checkbox {
+  pointer-events: auto !important;
+}

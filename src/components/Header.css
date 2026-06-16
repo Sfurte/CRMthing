@@ -1,0 +1,51 @@
+/* ═══════════════════════════════════════════
+   Header — Top bar with back button and title
+   ═══════════════════════════════════════════ */
+
+.header {
+  height: var(--header-height);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 var(--space-5);
+}
+
+.header--with-back {
+  justify-content: space-between;
+}
+
+.header--centered {
+  justify-content: center;
+}
+
+.header__left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.header__back-icon {
+  cursor: pointer;
+  display: flex;
+}
+
+.header__back-text {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.header__title {
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.header__spacer {
+  width: 277px;
+}

@@ -1,0 +1,217 @@
+/* ═══════════════════════════════════════════
+   Checkbox Element
+   ═══════════════════════════════════════════ */
+
+.element-checkbox {
+  width: 100%;
+  height: 100%;
+  padding: var(--space-2);
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  pointer-events: auto;
+}
+
+.element-checkbox__group {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.element-checkbox__group--vertical {
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.element-checkbox__group--horizontal {
+  flex-direction: row;
+}
+
+.element-checkbox__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  position: relative;
+}
+
+.element-checkbox__label {
+  cursor: text;
+  padding: 2px 4px;
+}
+
+.element-checkbox__label-input {
+  width: 100%;
+  border: 1px solid var(--accent);
+  background: var(--bg-surface);
+  padding: 2px 6px;
+  font-size: 13px;
+  outline: none;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: var(--text-primary);
+  cursor: text;
+  font-family: inherit;
+}
+
+.element-checkbox__remove-btn {
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: var(--bg-hover);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.element-checkbox__remove-btn:hover {
+  background: var(--border-color);
+}
+
+/* ═══════════════════════════════════════════
+   Dark Theme — Force White Checkbox
+   ═══════════════════════════════════════════ */
+
+[data-theme="dark"] .element-checkbox {
+  background: #FFFFFF;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-wrapper {
+  color: #F5F5F5 !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-inner {
+  background: #FFFFFF !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+  background: #3B82F6 !important;
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox:hover .ant-checkbox-inner {
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-checkbox__label-input {
+  background: #FFFFFF !important;
+  color: #F5F5F5 !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .element-checkbox__remove-btn {
+  background: #F5F5F5 !important;
+  color: #F5F5F5 !important;
+}
+/* ═══════════════════════════════════════════
+   Dark Theme — Force White Checkbox (Enhanced)
+   ══════════════════════════════════════════ */
+
+[data-theme="dark"] .element-checkbox {
+  background: #FFFFFF !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-wrapper {
+  color: #202020 !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox {
+  background: transparent !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-inner {
+  background: #FFFFFF !important;
+  border: 1px solid #D4D4D4 !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+  background: #3B82F6 !important;
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: #FFFFFF !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-top: 0 !important;
+  border-left: 0 !important;
+  transform: rotate(45deg) scale(0.8) translate(-25%, -25%) !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox:hover .ant-checkbox-inner {
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-checkbox .ant-checkbox-disabled .ant-checkbox-inner {
+  background: #F5F5F5 !important;
+  border-color: #D9D9D9 !important;
+}
+
+[data-theme="dark"] .element-checkbox__label-input {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .element-checkbox__remove-btn {
+  background: #F5F5F5 !important;
+  color: #202020 !important;
+}
+.element-checkbox__remove-btn {
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: #fff1f0; /* Светло-красный фон */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #ff4d4f; /* Красный крестик */
+  transition: all 0.2s ease;
+}
+
+.element-checkbox__remove-btn:hover {
+  background: #ff4d4f; /* Красный фон при наведении */
+  color: #ffffff;      /* Белый крестик при наведении */
+}
+
+.element-checkbox {
+  padding: 8px !important;
+}
+
+.element-checkbox__group {
+  gap: 6px !important;
+}
+
+.element-checkbox__item {
+  gap: 4px !important;
+}
+
+.element-checkbox__label {
+  font-size: 12px !important;
+  padding: 1px 2px !important;
+}
+
+.element-checkbox__label-input {
+  font-size: 12px !important;
+  padding: 2px 4px !important;
+}

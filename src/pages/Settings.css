@@ -1,0 +1,99 @@
+/* ═══════════════════════════════════════════
+   Settings — Theme, language, auto-save
+   ═══════════════════════════════════════════ */
+
+.settings {
+  padding: 40px 60px;
+  color: var(--text-primary);
+}
+
+.settings__section {
+  margin-bottom: var(--space-8);
+}
+
+.settings__heading {
+  margin: 0 0 var(--space-4) 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.settings__dot {
+  font-size: 10px;
+}
+
+.settings__hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-top: var(--space-2);
+}
+
+/* ── Toggle group ── */
+
+.settings__toggle-group {
+  display: flex;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  width: fit-content;
+}
+
+.settings__toggle-btn {
+  padding: var(--space-1) var(--space-4);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-normal);
+}
+
+.settings__toggle-btn--active {
+  color: var(--accent);
+  font-weight: var(--font-weight-semibold);
+  background: var(--accent-light);
+}
+
+/* ── Checkbox row ── */
+
+.settings__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+}
+
+.settings__checkbox input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* ── Reset section ── */
+
+.settings__reset-section {
+  margin-bottom: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-color);
+}
+
+.settings__reset-btn {
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid #ff4d4f;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: #ff4d4f;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  transition: all 0.2s;
+}
+
+.settings__reset-btn:hover {
+  background: #ff4d4f;
+  color: #fff;
+}

@@ -1,0 +1,81 @@
+/* ═══════════════════════════════════════════
+   Image Element
+   ═══════════════════════════════════════════ */
+
+.element-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: var(--bg-hover);
+  overflow: hidden;
+}
+
+.element-image__preview {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.element-image__empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  color: var(--text-tertiary);
+  padding: var(--space-5);
+}
+
+.element-image__empty--clickable {
+  cursor: pointer;
+}
+
+.element-image__icon {
+  font-size: 48px;
+  margin-bottom: var(--space-3);
+  color: var(--border-strong);
+}
+
+.element-image__empty-text {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.element-image__hint {
+  margin: var(--space-2) 0 0 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.element-image__actions {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: flex;
+  gap: var(--space-2);
+}
+
+.element-image__action-btn {
+  padding: 6px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  box-shadow: var(--shadow-sm);
+}
+
+.element-image__action-btn--danger {
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+}

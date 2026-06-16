@@ -1,0 +1,35 @@
+/* ═══════════════════════════════════════════
+   Input Element
+   ═══════════════════════════════════════════ */
+
+.element-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  height: 100%;
+}
+
+.element-input__label {
+  font-weight: var(--font-weight-medium);
+  user-select: none;
+  margin-bottom: 2px;
+}
+.element-input {
+  pointer-events: auto !important;
+}
+
+.element-input .ant-input {
+  pointer-events: auto !important;
+  cursor: text !important;
+}
+
+/* Разрешаем клики по Input даже когда элемент выбран */
+.canvas-element.selected .element-input,
+.canvas-element.selected .element-input * {
+  pointer-events: auto !important;
+}
+
+.canvas-element.selected .ant-input {
+  cursor: text !important;
+}

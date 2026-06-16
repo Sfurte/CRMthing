@@ -1,0 +1,211 @@
+/* ═══════════════════════════════════════════
+   Radio Element
+   ═══════════════════════════════════════════ */
+
+.element-radio {
+  width: 100%;
+  height: 100%;
+  padding: var(--space-2);
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  pointer-events: auto;
+}
+
+.element-radio__group {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.element-radio__group--vertical {
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.element-radio__group--horizontal {
+  flex-direction: row;
+}
+
+.element-radio__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  position: relative;
+}
+
+.element-radio__label {
+  cursor: text;
+  padding: 2px 4px;
+}
+
+.element-radio__label-input {
+  width: 100%;
+  border: 1px solid var(--accent);
+  background: var(--bg-surface);
+  padding: 2px 6px;
+  font-size: 13px;
+  outline: none;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: var(--text-primary);
+  cursor: text;
+  font-family: inherit;
+}
+
+.element-radio__remove-btn {
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: var(--bg-hover);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.element-radio__remove-btn:hover {
+  background: var(--border-color);
+}
+
+/* ═══════════════════════════════════════════
+   Dark Theme — Force White Radio
+   ═══════════════════════════════════════════ */
+
+[data-theme="dark"] .element-radio {
+  background: #FFFFFF;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-wrapper {
+  color: #202020 !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-inner {
+  background: #FFFFFF !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-checked .ant-radio-inner {
+  background: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-checked .ant-radio-inner::after {
+  background: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio:hover .ant-radio-inner {
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-radio__label-input {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .element-radio__remove-btn {
+  background: #F5F5F5 !important;
+  color: #202020 !important;
+}
+/* ═══════════════════════════════════════════
+   Dark Theme — Force White Radio (Enhanced)
+   ═══════════════════════════════════════════ */
+
+[data-theme="dark"] .element-radio {
+  background: #FFFFFF !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-wrapper {
+  color: #202020 !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio {
+  background: transparent !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-inner {
+  background: #FFFFFF !important;
+  border: 1px solid #D4D4D4 !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-checked .ant-radio-inner {
+  background: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-checked .ant-radio-inner::after {
+  background: #3B82F6 !important;
+  transform: scale(0.5) !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio:hover .ant-radio-inner {
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .element-radio .ant-radio-disabled .ant-radio-inner {
+  background: #F5F5F5 !important;
+  border-color: #D9D9D9 !important;
+}
+
+[data-theme="dark"] .element-radio__label-input {
+  background: #FFFFFF !important;
+  color: #202020 !important;
+  border-color: #D4D4D4 !important;
+}
+
+[data-theme="dark"] .element-radio__remove-btn {
+  background: #F5F5F5 !important;
+  color: #202020 !important;
+}
+.element-radio__remove-btn {
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: #fff1f0; /* Светло-красный фон */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #ff4d4f; /* Красный крестик */
+  transition: all 0.2s ease;
+}
+
+.element-radio__remove-btn:hover {
+  background: #ff4d4f; /* Красный фон при наведении */
+  color: #ffffff;      /* Белый крестик при наведении */
+}
+.element-radio {
+  padding: 8px !important;
+}
+
+.element-radio__group {
+  gap: 6px !important;
+}
+
+.element-radio__item {
+  gap: 4px !important;
+}
+
+.element-radio__label {
+  font-size: 12px !important;
+  padding: 1px 2px !important;
+}
+
+.element-radio__label-input {
+  font-size: 12px !important;
+  padding: 2px 4px !important;
+}

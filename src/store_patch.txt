@@ -1,0 +1,42 @@
+
+      removeProject: (projectId) =>
+        set((state) => {
+          const { [projectId]: removed, ...remaining } = state.projects;
+          const remainingIds = Object.keys(remaining);
+          return {
+            projects: remaining,
+            activeProjectId: state.activeProjectId === projectId ? (remainingIds[0] || null) : state.activeProjectId,
+            activePageId: remainingIds[0] && state.activeProjectId === projectId ? Object.values(remaining[remainingIds[0]].pages)[0]?.id : (remainingIds.length ? state.activePageId : null),
+            selectedId: null,
+          };
+        }),
+
+      setActivePage: (pageId) => set({ activePageId: pageId }),
+
+      addPage: (name) =>
+        set((state) => {
+          const project = state.projects[state.activeProjectId];
+          if (!project) return state;
+          const pageKeys = Object.keys(project.pages);
+          const maxNum = pageKeys.reduce((max, k) => {
+            const m = k.match(/page-(\d+)/);
+            if (m) maxNum = Math.max(maxNum, parseInt(m[1], 10));
+          }, 0);
+          const newId = 'page-' + (maxNum + 1);
+          const newPage = {
+            id: newId,
+            name: name || 'Page ' + (maxNum + 1),
+            elements: [],
+            viewTransform: { x: 0, y: 0, zoom: 1 },
+          };
+          return {
+            activePageId: newId,
+            projects: {
+              ...state.projects,
+              [state.activeProjectId]: {
+                ...project,
+                pages: { ...project.pages, [newId]: newPage },
+              },
+            },
+          };
+        }),

@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════════
+   ZoomControl — Zoom percentage display and input
+   ═══════════════════════════════════════════ */
+
+.zoom-control {
+  position: relative;
+}
+
+.zoom-control__btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-2) 14px;
+  gap: var(--space-2);
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.zoom-control__btn:hover {
+  background: var(--bg-hover);
+}
+
+.zoom-control__dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: var(--z-dropdown);
+  padding: var(--space-3);
+  min-width: 120px;
+}
+
+.zoom-control__label {
+  font-family: var(--font-family);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.zoom-control__input {
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  box-sizing: border-box;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+}

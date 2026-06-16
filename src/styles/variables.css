@@ -1,0 +1,117 @@
+/* ═══════════════════════════════════════════
+   CRMthing — CSS Custom Properties (Design Tokens)
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* ── Backgrounds ── */
+  --bg-canvas: #F0F7FF;
+  --bg-surface: #FFFFFF;
+  --bg-hover: #F5F5F5;
+  --bg-selected: #F0F7FF;
+  --bg-card: #FFFFFF;
+  --bg-danger: #fff1f0;
+  --bg-tooltip: #FFFFFF;
+
+  /* ── Text ── */
+  --text-primary: #202020;
+  --text-secondary: #525252;
+  --text-tertiary: #999999;
+  --text-inverse: #FFFFFF;
+
+  /* ── Borders ── */
+  --border-color: #E0E0E0;
+  --border-strong: #D4D4D4;
+  --border-accent: #3B82F6;
+
+  /* ── Accent / Brand ── */
+  --accent: #3B82F6;
+  --accent-hover: #2563EB;
+  --accent-light: #e6f4ff;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0px 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* ── Radii ── */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* ── Typography ── */
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-sm: 1.2;
+  --line-height-md: 1.4;
+  --line-height-lg: 1.6;
+
+  /* ── Spacing (multiples of 4px) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* ── Sizing ── */
+  --header-height: 60px;
+  --toolbar-height: 44px;
+  --left-panel-width: 359px;
+  --sidebar-width: 280px;
+
+  /* ── Z-index layers ── */
+  --z-element: 1;
+  --z-selected: 10;
+  --z-context-bar: 60;
+  --z-dropdown: 1000;
+  --z-modal: 1000;
+  --z-resize-handle: 100;
+
+  /* ── Artboard ── */
+  --artboard-width: 1440px;
+  --artboard-height: 900px;
+}
+
+/* ═══════════════════════════════════════════
+   Dark Theme
+   ═══════════════════════════════════════════ */
+
+[data-theme="dark"] {
+  --bg-canvas: #141414;
+  --bg-surface: #1f1f1f;
+  --bg-hover: #2a2a2a;
+  --bg-selected: #1a1a2e;
+  --bg-card: #1f1f1f;
+  --bg-danger: #2a1a1a;
+  --bg-tooltip: #2a2a2a;
+
+  --text-primary: #e8e8e8;
+  --text-secondary: #a0a0a0;
+  --text-tertiary: #666666;
+  --text-inverse: #1f1f1f;
+
+  --border-color: #333333;
+  --border-strong: #444444;
+  --border-accent: #4A9EFF;
+
+  --accent: #4A9EFF;
+  --accent-hover: #6BB5FF;
+  --accent-light: #1a2a3e;
+
+  --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0px 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0px 8px 24px rgba(0, 0, 0, 0.5);
+}

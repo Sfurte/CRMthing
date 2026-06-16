@@ -1,0 +1,38 @@
+/* ═══════════════════════════════════════════
+   Canvas — The artboard container with zoom/pan
+   ═══════════════════════════════════════════ */
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-strong);
+}
+
+.canvas--panning {
+  cursor: grab;
+}
+
+.canvas--default {
+  cursor: default;
+}
+
+.canvas__world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  transform-origin: 0 0;
+}
+
+.canvas__artboard {
+  width: var(--artboard-width);
+  height: var(--artboard-height);
+  background: var(--bg-surface);
+  position: relative;
+  overflow: hidden;
+  border: 1px dashed var(--accent);
+}

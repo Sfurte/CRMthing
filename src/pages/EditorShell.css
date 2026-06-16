@@ -1,0 +1,28 @@
+/* ═══════════════════════════════════════════
+   EditorShell — Full editor layout
+   ═══════════════════════════════════════════ */
+
+.editor-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.editor-shell__body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-shell__center {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-shell__canvas-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
