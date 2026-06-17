@@ -4,6 +4,7 @@ import { Button, Space } from 'antd';
 import { Column, Line, Pie, Area, Bar } from '@ant-design/charts';
 import useStore from '../store';
 import { useLang } from '../hooks/useLang';
+import InlineEditable from './InlineEditable';
 
 export const definition = {
   type: 'Chart',
@@ -24,75 +25,6 @@ export const definition = {
     { name: 'color', label: 'color', type: 'color' },
   ],
 };
-
-// 🔹 Редактируемый заголовок
-function EditableTitle({ value, onSave }) {
-  const { t } = useLang();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(value);
-  const inputRef = useRef(null);
-
-  useEffect(() => { setEditValue(value); }, [value]);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      const timer = setTimeout(() => inputRef.current?.focus(), 10);
-      return () => clearTimeout(timer);
-    }
-  }, [isEditing]);
-
-  const handleSave = () => {
-    if (editValue.trim()) {
-      onSave(editValue.trim());
-    }
-    setIsEditing(false);
-  };
-
-  const displayValue = t(value) !== value ? t(value) : value;
-
-  if (!isEditing) {
-    return (
-      <div
-        onDoubleClick={(e) => {
-          e.stopPropagation();
-          e.nativeEvent?.stopImmediatePropagation?.();
-          setIsEditing(true);
-        }}
-        style={{
-          fontSize: 16, fontWeight: 500, textAlign: 'center', cursor: 'text',
-          padding: '8px 4px', marginBottom: 4, color: '#333', userSelect: 'none'
-        }}
-      >
-        {displayValue}
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '4px' }}>
-      <input
-        ref={inputRef}
-        type="text"
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') { e.preventDefault(); handleSave(); }
-          if (e.key === 'Escape') { e.preventDefault(); setIsEditing(false); setEditValue(value); }
-          e.stopPropagation();
-        }}
-        style={{
-          width: '70%', fontSize: 16, fontWeight: 500, textAlign: 'center',
-          border: '1px solid #1890ff', outline: 'none', padding: '4px 8px',
-          background: '#fff', color: '#000', borderRadius: 4, cursor: 'text'
-        }}
-      />
-      <Button size="small" type="primary" icon={<CheckOutlined />} onClick={handleSave} />
-      <Button size="small" onClick={() => { setIsEditing(false); setEditValue(value); }}>
-        {t('cancel')}
-      </Button>
-    </div>
-  );
-}
 
 // 🔹 Оверлей редактора данных с историей отмены
 function DataEditorOverlay({ data, onSave, onClose }) {
@@ -233,7 +165,6 @@ function DataEditorOverlay({ data, onSave, onClose }) {
               onClick={() => removeRow(index)}
               onPointerDown={preventDrag}
               onMouseDown={preventDrag}
-              ghost 
             />
           </div>
         ))}
@@ -242,7 +173,7 @@ function DataEditorOverlay({ data, onSave, onClose }) {
   );
 }
 
-export default function ChartElement({ element, isSelected }) {
+export default function ChartElement({ element }) {
   const { t } = useLang();
   const updateElementProps = useStore((s) => s.updateElementProps);
   
@@ -275,20 +206,13 @@ export default function ChartElement({ element, isSelected }) {
 
   return (
     <div 
-      data-no-dnd={!isEditingData}
       style={{ 
         width: '100%', height: '100%', display: 'flex', flexDirection: 'column', 
         position: 'relative', background: '#fff', borderRadius: 8, overflow: 'hidden'
       }}
-      onDoubleClick={(e) => {
-        if (!e.target.closest('[data-title-edit]') && !isEditingData) {
-          e.stopPropagation();
-          setIsEditingData(true);
-        }
-      }}
     >
-      <div data-title-edit style={{ flexShrink: 0, zIndex: 10, background: '#fff' }}>
-        <EditableTitle value={title} onSave={handleTitleSave} />
+      <div style={{ flexShrink: 0, zIndex: 10, background: '#fff', textAlign: 'center', padding: '8px 4px 4px' }}>
+        <InlineEditable value={title} onSave={handleTitleSave} style={{ fontSize: 16, fontWeight: 500, textAlign: 'center' }} />
       </div>
       
       <div style={{ flex: 1, minHeight: 0, width: '100%', position: 'relative' }}>

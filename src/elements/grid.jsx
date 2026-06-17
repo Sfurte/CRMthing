@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { AppstoreOutlined } from '@ant-design/icons';
 import useStore from '../store';
 import { useLang } from '../hooks/useLang';
 import { textBlock, textStyles } from './blocks/textStyle';
+import InlineEditable from './InlineEditable';
 import './grid.css';
 
 export const definition = {
@@ -28,97 +29,6 @@ export const definition = {
   ],
 };
 
-const EditableCell = ({ value, onSave, style, textColor, cellBgColor, isEditing, onFocus }) => {
-  const { t } = useLang();
-  const [editValue, setEditValue] = useState(value);
-  const inputRef = useRef(null);
-
-  useEffect(() => { setEditValue(value); }, [value]);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-      onFocus();
-    }
-  }, [isEditing, onFocus]);
-
-  const handleSave = () => {
-    onSave(editValue);
-  };
-
-  const stopEvents = (e) => {
-    e.stopPropagation();
-    e.nativeEvent?.stopImmediatePropagation?.();
-  };
-
-  const displayValue = t(value) !== value ? t(value) : value;
-
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        background: cellBgColor || '#fff',
-        borderRadius: 4,
-        border: isEditing ? `2px solid ${textColor || '#1890ff'}` : '1px solid #d9d9d9',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        transition: 'all 0.2s',
-        ...style,
-      }}
-      onDoubleClick={(e) => {
-        if (!isEditing) {
-          stopEvents(e);
-          onFocus();
-        }
-      }}
-    >
-      {isEditing ? (
-        <input
-          ref={inputRef}
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onBlur={handleSave}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') { e.preventDefault(); handleSave(); }
-            if (e.key === 'Escape') { setEditValue(value); onFocus(); }
-            stopEvents(e);
-          }}
-          onPointerDown={stopEvents}
-          onClick={stopEvents}
-          style={{
-            width: '90%',
-            border: 'none',
-            background: 'transparent',
-            textAlign: 'center',
-            color: textColor || '#000',
-            fontSize: 12,
-            outline: 'none',
-            padding: 4,
-          }}
-        />
-      ) : (
-        <div style={{
-          color: textColor || '#000',
-          fontSize: 12,
-          padding: 4,
-          textAlign: 'center',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          width: '100%',
-          ...style,
-        }}>
-          {displayValue ?? ''}
-        </div>
-      )}
-    </div>
-  );
-};
-
 export default function GridElement({ element, isSelected }) {
   const { t } = useLang();
   const updateElementProps = useStore((s) => s.updateElementProps);
@@ -135,13 +45,10 @@ export default function GridElement({ element, isSelected }) {
     cellData[i] ?? `${t('cell')} ${Math.floor(i / cols) + 1}.${(i % cols) + 1}`
   );
 
-  const [editingIndex, setEditingIndex] = useState(null);
-
   const handleCellSave = (index, newValue) => {
     const newData = [...normalizedData];
     newData[index] = newValue;
     updateElementProps(element.id, { cellData: newData });
-    setEditingIndex(null);
   };
 
   return (
@@ -159,20 +66,27 @@ export default function GridElement({ element, isSelected }) {
         }}
       >
         {normalizedData.map((text, index) => (
-          <EditableCell
-            key={index}
-            value={text}
-            textColor={ts.color}
-            cellBgColor={props.cellBgColor}
+          <div key={index} className="element-grid__cell"
             style={{
-              fontWeight: ts.fontWeight,
-              fontStyle: ts.fontStyle,
-              fontSize: ts.fontSize,
+              background: props.cellBgColor || '#fff',
+              border: '1px solid #d9d9d9',
+              borderRadius: 4,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+              padding: 4,
             }}
-            isEditing={editingIndex === index}
-            onFocus={() => setEditingIndex(index)}
-            onSave={(val) => handleCellSave(index, val)}
-          />
+          >
+            <InlineEditable
+              value={text}
+              onSave={(val) => handleCellSave(index, val)}
+              style={{
+                fontSize: 12, textAlign: 'center', padding: 0, width: '100%',
+                fontWeight: ts.fontWeight, fontStyle: ts.fontStyle, fontSize: ts.fontSize,
+              }}
+            />
+          </div>
         ))}
       </div>
     </div>

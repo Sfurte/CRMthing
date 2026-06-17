@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Radio } from 'antd';
 import { CheckCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import useStore from '../store';
 import { useLang } from '../hooks/useLang';
 import { textBlock, textStyles } from './blocks/textStyle';
+import InlineEditable from './InlineEditable';
 import './radio.css';
 
 export const definition = {
@@ -30,46 +31,7 @@ export const definition = {
   ],
 };
 
-// ✅ Функция для остановки drag при клике на интерактивные элементы
-const stopDrag = (e) => {
-  e.stopPropagation();
-};
-
-const EditableLabel = ({ value, onSave, style: tsStyle }) => {
-  const { t } = useLang();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(value);
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      const timer = setTimeout(() => { inputRef.current?.focus(); inputRef.current?.select(); }, 10);
-      return () => clearTimeout(timer);
-    }
-  }, [isEditing]);
-  useEffect(() => { setEditValue(value); }, [value]);
-
-  const handleSave = () => { if (editValue.trim()) onSave(editValue.trim()); setIsEditing(false); };
-  const stopEvents = (e) => { e.stopPropagation(); e.nativeEvent?.stopImmediatePropagation?.(); };
-
-  const displayValue = t(value) !== value ? t(value) : value;
-
-  if (isEditing) {
-    return (
-      <input ref={inputRef} type="text" value={editValue} onChange={(e) => setEditValue(e.target.value)}
-        onBlur={handleSave}
-        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } if (e.key === 'Escape') { setEditValue(value); setIsEditing(false); } stopEvents(e); }}
-        onPointerDown={stopEvents} onClick={stopEvents}
-        className="element-radio__label-input" style={tsStyle} />
-    );
-  }
-  return (
-    <span onDoubleClick={(e) => { stopEvents(e); setIsEditing(true); }}
-      className="element-radio__label" style={tsStyle}>
-      {displayValue}
-    </span>
-  );
-};
+const stopDrag = (e) => { e.stopPropagation(); };
 
 export default function RadioElement({ element, isSelected }) {
   const { t } = useLang();
@@ -107,13 +69,12 @@ export default function RadioElement({ element, isSelected }) {
         className={'element-radio__group element-radio__group--' + direction}>
         {options.map((option, index) => (
           <div key={option.value} className="element-radio__item">
-            {/* ✅ stopDrag только на Radio — клик не начинает drag */}
             <Radio 
               value={option.value}
               onPointerDown={stopDrag}
               onMouseDown={stopDrag}
             />
-            <EditableLabel value={option.label} onSave={(val) => handleLabelSave(index, val)} style={ts} />
+            <InlineEditable value={option.label} onSave={(val) => handleLabelSave(index, val)} style={ts} />
             {isSelected && options.length > 1 && (
               <button className="element-radio__remove-btn"
                 onPointerDown={(e) => e.stopPropagation()}
