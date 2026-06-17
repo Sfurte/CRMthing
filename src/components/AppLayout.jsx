@@ -16,9 +16,9 @@ export default function AppLayout() {
   const selectedKey = location.pathname === '/' ? 'projects' : location.pathname.slice(1);
 
   const menuItems = useMemo(() => [
-    { key: 'projects', icon: <FolderOutlined />, label: t('projects') },
-    { key: 'settings', icon: <SettingOutlined />, label: t('settings') },
-    { key: 'help', icon: <QuestionCircleOutlined />, label: t('help') },
+    { key: 'projects', icon: <FolderOutlined />, label: 'Проекты' },
+    { key: 'settings', icon: <SettingOutlined />, label: 'Настройки' },
+    { key: 'help', icon: <QuestionCircleOutlined />, label: 'Помощь' },
   ], [t]);
 
   const handleMenuClick = ({ key }) => {

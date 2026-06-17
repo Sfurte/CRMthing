@@ -1,6 +1,12 @@
 import { createContext, useContext } from 'react';
 import useSettingsStore from '../store/settingsStore';
-export { translations } from './translations';
+import { translations } from './translations';
+
+function translate(key, lang) {
+  if (translations[lang]?.[key]) return translations[lang][key];
+  if (translations.ru?.[key]) return translations.ru[key];
+  return key;
+}
 
 const I18nContext = createContext({
   t: (key) => key,
