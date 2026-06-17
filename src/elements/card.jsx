@@ -1,3 +1,4 @@
+import { Card } from 'antd';
 import { CreditCardOutlined } from '@ant-design/icons';
 import useStore from '../store';
 import { textBlock, textStyles } from './blocks/textStyle';
@@ -15,8 +16,6 @@ export const definition = {
     ...textBlock.defaultProps,
   },
   properties: [
-    { name: 'title', label: 'title', type: 'text' },
-    { name: 'content', label: 'content', type: 'textarea' },
     { name: 'bgColor', label: 'bgColor', type: 'color' },
     ...textBlock.properties,
   ],
@@ -29,22 +28,24 @@ export default function CardElement({ element }) {
   const ts = textStyles(props);
 
   return (
-    <div className="element-card" style={{ backgroundColor: bgColor || '#fff' }}>
-      <div className="element-card__header">
+    <Card
+      title={
         <InlineEditable
           value={title}
           onSave={(val) => updateElementProps(element.id, { title: val })}
-          style={{ fontWeight: 600, ...ts }}
+          style={{ fontWeight: 600, padding: 0, ...ts }}
         />
-      </div>
-      <div className="element-card__body">
-        <InlineEditable
-          value={content}
-          onSave={(val) => updateElementProps(element.id, { content: val })}
-          multiline
-          style={ts}
-        />
-      </div>
-    </div>
+      }
+      className="element-card"
+      style={{ backgroundColor: bgColor || '#fff', height: '100%', width: '100%' }}
+      styles={{ body: { flex: 1, overflow: 'auto', padding: '12px 16px' } }}
+    >
+      <InlineEditable
+        value={content}
+        onSave={(val) => updateElementProps(element.id, { content: val })}
+        multiline
+        style={ts}
+      />
+    </Card>
   );
 }

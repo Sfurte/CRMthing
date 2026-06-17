@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { AppstoreOutlined } from '@ant-design/icons';
 import useStore from '../store';
 import { useLang } from '../hooks/useLang';
@@ -29,7 +28,7 @@ export const definition = {
   ],
 };
 
-export default function GridElement({ element, isSelected }) {
+export default function GridElement({ element }) {
   const { t } = useLang();
   const updateElementProps = useStore((s) => s.updateElementProps);
   const props = element?.props || definition.defaultProps;
@@ -54,19 +53,29 @@ export default function GridElement({ element, isSelected }) {
   return (
     <div
       className="element-grid"
-      style={{ background: props.bgColor || '#f0f5ff', pointerEvents: 'auto' }}
-      onClick={(e) => e.stopPropagation()}
+      style={{
+        background: props.bgColor || '#f0f5ff',
+        pointerEvents: 'auto',
+        padding: gap / 2,
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
+      }}
     >
       <div
         className="element-grid__inner"
         style={{
+          display: 'grid',
+          height: '100%',
+          width: '100%',
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
           gridTemplateRows: `repeat(${rows}, 1fr)`,
           gap: `${gap}px`,
         }}
       >
         {normalizedData.map((text, index) => (
-          <div key={index} className="element-grid__cell"
+          <div
+            key={index}
             style={{
               background: props.cellBgColor || '#fff',
               border: '1px solid #d9d9d9',

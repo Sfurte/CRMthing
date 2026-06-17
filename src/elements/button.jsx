@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button } from 'antd';
 import { InteractionOutlined } from '@ant-design/icons';
 import useStore from '../store';
@@ -17,7 +16,6 @@ export const definition = {
     ...textBlock.defaultProps,
   },
   properties: [
-    { name: 'text', label: 'content', type: 'text' },
     { name: 'type', label: 'type', type: 'select', options: ['primary', 'default', 'dashed', 'text', 'link'] },
     ...textBlock.properties,
   ],
@@ -29,26 +27,17 @@ export default function ButtonElement({ element }) {
   const props = element?.props || {};
   const ts = textStyles(props);
   const updateElementProps = useStore((s) => s.updateElementProps);
-  const [editing, setEditing] = useState(false);
 
   const displayText = t(text) !== text ? t(text) : text;
 
-  if (editing) {
-    return (
-      <div className="element-button">
+  return (
+    <div className="element-button">
+      <Button type={type} block style={{ width: '100%', height: '100%', ...ts, pointerEvents: 'auto' }}>
         <InlineEditable
           value={text}
-          onSave={(val) => { updateElementProps(element.id, { text: val }); setEditing(false); }}
-          style={ts}
+          onSave={(val) => updateElementProps(element.id, { text: val })}
+          style={{ background: 'transparent', border: 'none', padding: 0, minHeight: 'auto', color: 'inherit', fontWeight: 'inherit', fontSize: 'inherit', lineHeight: 'inherit', textAlign: 'center' }}
         />
-      </div>
-    );
-  }
-
-  return (
-    <div className="element-button" onDoubleClick={(e) => { e.stopPropagation(); setEditing(true); }}>
-      <Button type={type} block style={{ width: '100%', height: '100%', ...ts, pointerEvents: 'auto' }}>
-        {displayText}
       </Button>
     </div>
   );
