@@ -16,7 +16,6 @@ export const definition = {
     ...textBlock.defaultProps,
   },
   properties: [
-    { name: 'content', label: 'content', type: 'textarea' },
     { name: 'textAlign', label: 'textAlign', type: 'select', options: ['left', 'center', 'right', 'justify'] },
     { name: 'bgColor', label: 'bgColor', type: 'color' },
     ...textBlock.properties,

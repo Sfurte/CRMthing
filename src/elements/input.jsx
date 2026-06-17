@@ -20,8 +20,6 @@ export const definition = {
     ...textBlock.defaultProps,
   },
   properties: [
-    { name: 'label', label: 'label', type: 'text' },
-    { name: 'placeholder', label: 'placeholder', type: 'text' },
     { name: 'size', label: 'size', type: 'select', options: ['large', 'middle', 'small'] },
     { name: 'showLabel', label: 'showLabel', type: 'checkbox' },
     ...textBlock.properties,
@@ -53,6 +51,7 @@ export default function InputElement({ element, isSelected }) {
         size={size}
         onPointerDown={stopDrag}
         onMouseDown={stopDrag}
+        onKeyDown={(e) => e.stopPropagation()}
         style={{ width: '100%' }}
       />
     </div>
