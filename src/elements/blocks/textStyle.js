@@ -6,10 +6,10 @@ export const textBlock = {
     color: '#000000',
   },
   properties: [
-    { name: 'fontSize', label: 'Размер шрифта', type: 'number', min: 8, max: 100, group: 'Оформление текста' },
-    { name: 'bold', label: 'Полужирный', type: 'checkbox', group: 'Оформление текста' },
-    { name: 'italic', label: 'Курсив', type: 'checkbox', group: 'Оформление текста' },
-    { name: 'color', label: 'Цвет текста', type: 'color', group: 'Оформление текста' },
+    { name: 'fontSize', label: 'fontSize', type: 'number', min: 8, max: 100, group: 'textStyle' },
+    { name: 'bold', label: 'bold', type: 'checkbox', group: 'textStyle' },
+    { name: 'italic', label: 'italic', type: 'checkbox', group: 'textStyle' },
+    { name: 'color', label: 'textColor', type: 'color', group: 'textStyle' },
   ],
 };
 
